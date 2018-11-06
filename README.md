@@ -1,8 +1,5 @@
 #  RxJava2 操作一览
 ---
-+ [1. create()](#1. create())
-+ [2. just()](#2. just())
-
 ## 一、基本概念
 + 被观察者（Observable）<br>
 + 观察者（Observer）<br>
@@ -57,6 +54,8 @@ observable.subscribe(observer);
 ---
 ## 四、操作符一览
 ### 创建操作符
+* [1. create()](#1. create())
+* [2. just()](#2. just())
 ### 1. create()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：创建一个被观察者**<br>
 > **方法预览：**
