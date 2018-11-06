@@ -547,10 +547,10 @@ public static Observable<Long> rangeLong(long start, long count)
 <span id="empty">
 
 ### 13. empty() & never() & error()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：<br>
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 + empty() ：直接发送 onComplete() 事件
 + never()：不发送任何事件
-+ error()：发送 onError() 事件**<br>
++ error()：发送 onError() 事件<br>
 > **方法预览：**
 ```
 public static <T> Observable<T> empty()
