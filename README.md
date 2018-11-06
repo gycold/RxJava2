@@ -1,12 +1,12 @@
-#  RxJava2 操作一览
+#  <font color=#2EB5AA size=6>RxJava2 操作一览</font>
 ---
-### 一、基本概念
+### <font color=#2EB5AA size=5>一、基本概念</font>
 > 被观察者（Observable）<br>
 > 观察者（Observer）<br>
 > 订阅（subscribe）
 ---
-### 二、使用步骤
-1. 创建被观察者：
+### <font color=#2EB5AA size=5>二、使用步骤</font>
+1. <font color=#2EB5AA size=4>创建被观察者：</font>
 ```
 Observable observable = Observable.create(new ObservableOnSubscribe<Integer>() {
     @Override
@@ -19,7 +19,7 @@ Observable observable = Observable.create(new ObservableOnSubscribe<Integer>() {
     }
 });
 ```
-2. 创建观察者：
+2. <font color=#2EB5AA size=4>创建观察者：</font>
 ```
 Observer observer = new Observer<Integer>() {
     @Override
@@ -40,24 +40,24 @@ Observer observer = new Observer<Integer>() {
     }
 };
 ```
-3. 订阅:
+3. <font color=#2EB5AA size=4>订阅:</font>
 ```
 observable.subscribe(observer);
 ```
 ---
-### 三、被观察者发送的事件
+### <font color=#2EB5AA size=5>三、被观察者发送的事件</font>
 | 事件种类 | 作用 |
 | :--- | :--- |
 | onNext() | 发送该事件时，观察者会回调 onNext() 方法 |
 | onError() | 发送该事件时，观察者会回调 onError() 方法，当发送该事件之后，其他事件将不会继续发送|
 | onComplete() | 发送该事件时，观察者会回调 onComplete() 方法，当发送该事件之后，其他事件将不会继续发送 |
 ---
-### 四、操作符一览
-#### 创建操作符
-1. `create()`<br>
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：创建一个被观察者**<br>
-> **方法预览：**```public static <T> Observable<T> create(ObservableOnSubscribe<T> source)```<br>
-> **方法使用：**
+### <font color=#2EB5AA size=5>四、操作符一览</font>
+#### <font color=#2EB5AA size=4>创建操作符</font>
+1. <font color=#2EB5AA size=4>create()</font><br>
+> <font color=#2EB5AA size=3>作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：创建一个被观察者</font><br>
+> <font color=#2EB5AA size=3>方法预览：</font>```public static <T> Observable<T> create(ObservableOnSubscribe<T> source)```<br>
+> <font color=#2EB5AA size=3>方法使用：</font>
 ```
 Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
     @Override
@@ -84,7 +84,7 @@ Observer<String> observer = new Observer<String>() {
 };
 observable.subscribe(observer);
 ```
-> **打印结果：**<br>
+> <font color=#2EB5AA size=3>打印结果：</font><br>
 ```
 11-06 11:40:59.411 20983-20983/com.css.rxjava D/RxJava: =============onNext Hello Observer
 11-06 11:40:59.411 20983-20983/com.css.rxjava D/RxJava: =============onComplete
