@@ -54,7 +54,7 @@ observable.subscribe(observer);
 ---
 ## 四、操作符一览
 ### 创建操作符
-#### 1. create()
+### 1. create()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：创建一个被观察者**<br>
 > **方法预览：**
 ```
@@ -73,16 +73,19 @@ Observer<String> observer = new Observer<String>() {
     @Override
     public void onSubscribe(Disposable d) {
     }
+
     @Override
     public void onNext(String s) {
-        Log.d("chan","=============onNext " + s);
+        Log.d("chan", "=============onNext " + s);
     }
+
     @Override
     public void onError(Throwable e) {
     }
+
     @Override
     public void onComplete() {
-        Log.d("chan","=============onComplete ");
+        Log.d("chan", "=============onComplete ");
     }
 };
 observable.subscribe(observer);
@@ -92,8 +95,8 @@ observable.subscribe(observer);
 11-06 11:40:59.411 20983-20983/com.css.rxjava D/RxJava: =============onNext Hello Observer
 11-06 11:40:59.411 20983-20983/com.css.rxjava D/RxJava: =============onComplete
 ```
-#### 2. just()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：创建一个被观察者，并发送事件，发送的事件不可以超过10个以上。**<br>
+### 2. just()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：创建一个被观察者，并发送事件，发送的事件不可以超过10个以上。**<br>
 > **方法预览：**
 ```
 public static <T> Observable<T> just(T item)
@@ -103,24 +106,28 @@ public static <T> Observable<T> just(T item1, T item2, T item3, T item4, T item5
 > **方法使用：**
 ```
 Observable.just(1, 2, 3)
-.subscribe(new Observer < Integer > () {
-    @Override
-    public void onSubscribe(Disposable d) {
-        Log.d(TAG, "=================onSubscribe");
-    }
-    @Override
-    public void onNext(Integer integer) {
-        Log.d(TAG, "=================onNext " + integer);
-    }
-    @Override
-    public void onError(Throwable e) {
-        Log.d(TAG, "=================onError ");
-    }
-    @Override
-    public void onComplete() {
-        Log.d(TAG, "=================onComplete ");
-    }
-});
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "=================onSubscribe");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "=================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "=================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "=================onComplete ");
+            }
+        });
+
 ```
 > **打印结果：**
 ```
@@ -130,8 +137,8 @@ Observable.just(1, 2, 3)
 11-06 16:07:24.291 25045-25045/com.css.rxjava D/RxJava: =================onNext 3
 11-06 16:07:24.291 25045-25045/com.css.rxjava D/RxJava: =================onComplete
 ```
-#### 3. fromArray()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：**<br>
+### 3. fromArray()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
 public static <T> Observable<T> fromArray(T... items)
@@ -144,14 +151,17 @@ Observable.fromArray(array)
             public void onSubscribe(Disposable d) {
                 Log.d(TAG, "=================onSubscribe");
             }
+
             @Override
             public void onNext(Integer integer) {
                 Log.d(TAG, "=================onNext " + integer);
             }
+
             @Override
             public void onError(Throwable e) {
                 Log.d(TAG, "=================onError ");
             }
+
             @Override
             public void onComplete() {
                 Log.d(TAG, "=================onComplete ");
@@ -168,8 +178,8 @@ Observable.fromArray(array)
 11-06 16:08:56.401 26163-26163/com.css.rxjava D/RxJava: =================onNext 4
 11-06 16:08:56.401 26163-26163/com.css.rxjava D/RxJava: =================onComplete
 ```
-#### 4. fromCallable()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：**<br>
+### 4. fromCallable()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
 s
@@ -182,8 +192,8 @@ s
 ```
 s
 ```
-#### 5. fromFuture()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：**<br>
+### 5. fromFuture()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
 s
@@ -196,8 +206,8 @@ s
 ```
 s
 ```
-#### 6. fromIterable()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：**<br>
+### 6. fromIterable()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
 s
@@ -210,8 +220,8 @@ s
 ```
 s
 ```
-#### 7. defer()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：**<br>
+### 7. defer()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
 s
@@ -224,8 +234,8 @@ s
 ```
 s
 ```
-#### 8. timer()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：**<br>
+### 8. timer()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
 s
@@ -238,8 +248,8 @@ s
 ```
 s
 ```
-#### 9. interval()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：**<br>
+### 9. interval()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
 s
@@ -252,8 +262,8 @@ s
 ```
 s
 ```
-#### 10. intervalRange()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：**<br>
+### 10. intervalRange()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
 s
@@ -266,8 +276,8 @@ s
 ```
 s
 ```
-#### 11. range()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：**<br>
+### 11. range()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
 s
@@ -280,8 +290,8 @@ s
 ```
 s
 ```
-#### 12. rangeLong()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：**<br>
+### 12. rangeLong()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
 s
@@ -294,8 +304,8 @@ s
 ```
 s
 ```
-#### 13. empty() & never() & error()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：**<br>
+### 13. empty() & never() & error()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
 s
@@ -308,8 +318,8 @@ s
 ```
 s
 ```
-#### 14. range()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#8201;：**<br>
+### 14. range()
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
 s
