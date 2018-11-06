@@ -73,8 +73,8 @@ observable.subscribe(observer);
 * [](#)
 * [](#)
 ### 创建操作符
-<span id="create">
 
+<span id="create">
 ### 1. create()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：创建一个被观察者**<br>
 > **方法预览：**
@@ -116,6 +116,7 @@ observable.subscribe(observer);
 11-06 11:40:59.411 20983-20983/com.css.rxjava D/RxJava: =============onNext Hello Observer
 11-06 11:40:59.411 20983-20983/com.css.rxjava D/RxJava: =============onComplete
 ```
+
 <span id="just">
 ### 2. just()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：创建一个被观察者，并发送事件，发送的事件不可以超过10个以上。**<br>
@@ -159,6 +160,7 @@ Observable.just(1, 2, 3)
 11-06 16:07:24.291 25045-25045/com.css.rxjava D/RxJava: =================onNext 3
 11-06 16:07:24.291 25045-25045/com.css.rxjava D/RxJava: =================onComplete
 ```
+
 <span id="fromArray">
 ### 3. fromArray()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
