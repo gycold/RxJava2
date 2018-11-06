@@ -1,11 +1,11 @@
 #  RxJava2 操作一览
 ---
-### 基本概念
+### 一、基本概念
 > 被观察者（Observable）<br>
 > 观察者（Observer）<br>
 > 订阅（subscribe）
 ---
-### 使用步骤
+### 二、使用步骤
 1. 创建被观察者：
 ```
 Observable observable = Observable.create(new ObservableOnSubscribe<Integer>() {
@@ -45,14 +45,14 @@ Observer observer = new Observer<Integer>() {
 observable.subscribe(observer);
 ```
 ---
-### 被观察者发送的事件
+### 三、被观察者发送的事件
 | 事件种类 | 作用 |
 | :--- | :--- |
 | onNext() | 发送该事件时，观察者会回调 onNext() 方法 |
 | onError() | 发送该事件时，观察者会回调 onError() 方法，当发送该事件之后，其他事件将不会继续发送|
 | onComplete() | 发送该事件时，观察者会回调 onComplete() 方法，当发送该事件之后，其他事件将不会继续发送 |
 ---
-### 操作符一览
+### 四、操作符一览
 #### 创建操作符
 1. > 方法：&#160;&#160;&#160;&#160;&#160;&#160;&#160;`create()`<br>
 > 作用：&#160;&#160;&#160;&#160;&#160;&#160;&#160;**创建一个被观察者**<br>
