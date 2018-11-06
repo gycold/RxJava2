@@ -55,7 +55,26 @@ observable.subscribe(observer);
 ## 四、操作符一览
 ### 创建操作符
 * [1. create()](#create)
-### 1. create()<span id="create">
+* [2. just()](#just)
+* [3. fromArray()](#fromArray)
+* [4. fromCallable()](#fromCallable)
+* [5. fromFuture()](#fromFuture)
+* [6. fromIterable()](#fromIterable)
+* [7. defer()](#defer)
+* [8. timer()](#timer)
+* [9. interval()](#interval)
+* [10. intervalRange()](#intervalRange)
+* [11. range()](#range)
+* [12. rangeLong()](#rangeLong)
+* [13. empty() & never() & error()](#empty)
+* [14. range()](#range)
+* [](#)
+* [](#)
+* [](#)
+* [](#)
+* [](#)
+<span id="create">
+### 1. create()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：创建一个被观察者**<br>
 > **方法预览：**
 ```
@@ -96,6 +115,7 @@ observable.subscribe(observer);
 11-06 11:40:59.411 20983-20983/com.css.rxjava D/RxJava: =============onNext Hello Observer
 11-06 11:40:59.411 20983-20983/com.css.rxjava D/RxJava: =============onComplete
 ```
+<span id="just">
 ### 2. just()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：创建一个被观察者，并发送事件，发送的事件不可以超过10个以上。**<br>
 > **方法预览：**
@@ -138,6 +158,7 @@ Observable.just(1, 2, 3)
 11-06 16:07:24.291 25045-25045/com.css.rxjava D/RxJava: =================onNext 3
 11-06 16:07:24.291 25045-25045/com.css.rxjava D/RxJava: =================onComplete
 ```
+<span id="fromArray">
 ### 3. fromArray()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
@@ -179,6 +200,7 @@ Observable.fromArray(array)
 11-06 16:08:56.401 26163-26163/com.css.rxjava D/RxJava: =================onNext 4
 11-06 16:08:56.401 26163-26163/com.css.rxjava D/RxJava: =================onComplete
 ```
+<span id="fromCallable">
 ### 4. fromCallable()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
@@ -193,6 +215,7 @@ s
 ```
 s
 ```
+<span id="fromFuture">
 ### 5. fromFuture()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
@@ -207,6 +230,7 @@ s
 ```
 s
 ```
+<span id="fromIterable">
 ### 6. fromIterable()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
@@ -221,6 +245,7 @@ s
 ```
 s
 ```
+<span id="defer">
 ### 7. defer()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
@@ -235,6 +260,7 @@ s
 ```
 s
 ```
+<span id="timer">
 ### 8. timer()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
@@ -249,6 +275,7 @@ s
 ```
 s
 ```
+<span id="interval">
 ### 9. interval()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
@@ -263,6 +290,7 @@ s
 ```
 s
 ```
+<span id="intervalRange">
 ### 10. intervalRange()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
@@ -277,6 +305,7 @@ s
 ```
 s
 ```
+<span id="range">
 ### 11. range()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
@@ -291,6 +320,7 @@ s
 ```
 s
 ```
+<span id="rangeLong">
 ### 12. rangeLong()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
@@ -305,6 +335,7 @@ s
 ```
 s
 ```
+<span id="empty">
 ### 13. empty() & never() & error()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
@@ -319,6 +350,7 @@ s
 ```
 s
 ```
+<span id="range">
 ### 14. range()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
