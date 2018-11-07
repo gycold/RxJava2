@@ -218,12 +218,12 @@ Observable.just(1, 2, 3)
 <span id="fromarray">
 
 ### 3. fromArray()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：这个方法和 just() 类似，只不过 fromArray 可以传入多于10个的变量，并且可以传入一个数组。**<br>
 > **方法预览：**
 ```
 public static <T> Observable<T> fromArray(T... items)
 ```
-> **方法使用：这个方法和 just() 类似，只不过 fromArray 可以传入多于10个的变量，并且可以传入一个数组。**
+> **方法使用：**
 ```
 Observable.fromArray(array)
         .subscribe(new Observer<Integer>() {
@@ -644,52 +644,195 @@ Observable.empty()
 <span id="map">
 
 ### 14. map()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：map 可以将被观察者发送的数据类型转变成其他的类型**<br>
 > **方法预览：**
 ```
-s
+public final <R> Observable<R> map(Function<? super T, ? extends R> mapper)
 ```
-> **方法使用：**
+> **方法使用：以下代码将 Integer 类型的数据转换成 String。**
 ```
-s
+Observable.just(1, 2, 3)
+        .map(new Function<Integer, String>() {
+            @Override
+            public String apply(Integer integer) throws Exception {
+                return "I'm " + integer;
+            }
+        })
+        .subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.e(TAG, "===================onSubscribe");
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.e(TAG, "===================onNext " + s);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 10:43:17.761 7161-7161/com.css.rxjava E/RxJava: ===================onSubscribe
+11-07 10:43:17.761 7161-7161/com.css.rxjava E/RxJava: ===================onNext I'm 1
+11-07 10:43:17.761 7161-7161/com.css.rxjava E/RxJava: ===================onNext I'm 2
+11-07 10:43:17.761 7161-7161/com.css.rxjava E/RxJava: ===================onNext I'm 3
 ```
 
 <span id="flatmap">
 
 ### 15. flatMap()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：这个方法可以将事件序列中的元素进行整合加工，返回一个新的被观察者。**<br>
 > **方法预览：**
 ```
-s
+public final <R> Observable<R> flatMap(Function<? super T, ? extends ObservableSource<? extends R>> mapper)
+......
 ```
-> **方法使用：**
+> **方法使用：flatMap() 其实与 map() 类似，但是 flatMap() 返回的是一个 Observerable。**
 ```
-s
+public class Person {
+    private String name;
+    private List<Plan> planList = new ArrayList<>();
+    public Person(String name, List<Plan> planList) {
+        this.name = name;
+        this.planList = planList;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public List<Plan> getPlanList() {
+        return planList;
+    }
+    public void setPlanList(List<Plan> planList) {
+        this.planList = planList;
+    }
+}
+```
+```
+public class Plan {
+    private String time;
+    private String content;
+    private List<String> actionList = new ArrayList<>();
+    public Plan(String time, String content) {
+        this.time = time;
+        this.content = content;
+    }
+    public String getTime() {
+        return time;
+    }
+    public void setTime(String time) {
+        this.time = time;
+    }
+    public String getContent() {
+        return content;
+    }
+    public void setContent(String content) {
+        this.content = content;
+    }
+    public List<String> getActionList() {
+        return actionList;
+    }
+    public void setActionList(List<String> actionList) {
+        this.actionList = actionList;
+    }
+}
+```
+```
+Observable.fromIterable(personList)
+        .flatMap(new Function<Person, ObservableSource<Plan>>() {
+            @Override
+            public ObservableSource<Plan> apply(Person person) {
+                return Observable.fromIterable(person.getPlanList());
+            }
+        })
+        .flatMap(new Function<Plan, ObservableSource<String>>() {
+            @Override
+            public ObservableSource<String> apply(Plan plan) throws Exception {
+                return Observable.fromIterable(plan.getActionList());
+            }
+        })
+        .subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.d(TAG, "==================action: " + s);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+会依次打印出Plan中的actionList：
+11-07 11:00:22.191 8533-8533/com.css.rxjava D/RxJava: ==================action: aaaaa
+11-07 11:00:22.191 8533-8533/com.css.rxjava D/RxJava: ==================action: bbbbb
 ```
 
 <span id="concatmap">
 
 ### 16. concatMap()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>concatMap() 和 flatMap() 基本上是一样的，只不过 concatMap() 转发出来的事件是有序的，而 flatMap() 是无序的。
 > **方法预览：**
 ```
-s
+public final <R> Observable<R> concatMap(Function<? super T, ? extends ObservableSource<? extends R>> mapper)
+public final <R> Observable<R> concatMap(Function<? super T, ? extends ObservableSource<? extends R>> mapper, int prefetch)
 ```
 > **方法使用：**
 ```
-s
+Observable.fromIterable(personList)
+        .flatMap(new Function<Person, ObservableSource<Plan>>() {
+            @Override
+            public ObservableSource<Plan> apply(Person person) {
+                if ("chan".equals(person.getName())) {
+                    return Observable.fromIterable(person.getPlanList()).delay(10, TimeUnit.MILLISECONDS);
+                }
+                return Observable.fromIterable(person.getPlanList());
+            }
+        })
+        .subscribe(new Observer<Plan>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onNext(Plan plan) {
+                Log.d(TAG, "==================plan " + plan.getContent());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 11:06:03.941 8764-8764/com.css.rxjava D/RxJava: ==================plan 撸代码
+11-07 11:06:03.941 8764-8764/com.css.rxjava D/RxJava: ==================plan 代码审核
+11-07 11:06:03.941 8764-8764/com.css.rxjava D/RxJava: ==================plan 吃饭
+11-07 11:06:03.941 8764-8764/com.css.rxjava D/RxJava: ==================plan 干活
 ```
 
 <span id="buffer">
