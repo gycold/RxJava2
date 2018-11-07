@@ -55,74 +55,74 @@ observable.subscribe(observer);
 ## 四、操作符一览
 + [1. create()](#create)
 + [2. just()](#just)
-+ [3. fromArray()](#fromArray)
-+ [4. fromCallable()](#fromCallable)
-+ [5. fromFuture()](#fromFuture)
-+ [6. fromIterable()](#fromIterable)
++ [3. fromArray()](#fromarray)
++ [4. fromCallable()](#fromcallable)
++ [5. fromFuture()](#fromfuture)
++ [6. fromIterable()](#fromiterable)
 + [7. defer()](#defer)
 + [8. timer()](#timer)
 + [9. interval()](#interval)
-+ [10. intervalRange()](#intervalRange)
++ [10. intervalRange()](#intervalrange)
 + [11. range()](#range)
-+ [12. rangeLong()](#rangeLong)
++ [12. rangeLong()](#rangelong)
 + [13. empty() & never() & error()](#empty)
 + [14. map()](#map)
-+ [15. flatMap()](#flatMap)
-+ [16. concatMap()](#concatMap)
++ [15. flatMap()](#flatmap)
++ [16. concatMap()](#concatmap)
 + [17. buffer()](#buffer)
-+ [18. groupBy()](#groupBy)
++ [18. groupBy()](#groupby)
 + [19. scan()](#scan)
 + [20. window()](#window)
 + [21. concat()](#concat)
-+ [22. concatArray()](#concatArray)
++ [22. concatArray()](#concatarray)
 + [23. merge()](#merge)
-+ [24. concatArrayDelayError() & mergeArrayDelayError()](#concatArrayDelayError)
++ [24. concatArrayDelayError() & mergeArrayDelayError()](#concatarraydelayerror)
 + [25. zip()](#zip)
-+ [26. combineLatest() & combineLatestDelayError()](#combineLatest)
++ [26. combineLatest() & combineLatestDelayError()](#combinelatest)
 + [27. reduce()](#reduce)
 + [28. collect()](#collect)
-+ [29. startWith() & startWithArray()](#startWith)
++ [29. startWith() & startWithArray()](#startwith)
 + [30. count()](#count)
 + [31. delay()](#delay)
-+ [32. doOnEach()](#doOnEach)
-+ [33. doOnNext()](#doOnNext)
-+ [34. doAfterNext()](#doAfterNext)
-+ [35. doOnComplete()](#doOnComplete)
-+ [36. doOnError()](#doOnError)
-+ [37. doOnSubscribe()](#doOnSubscribe)
-+ [38. doOnDispose()](#doOnDispose)
-+ [39. doOnLifecycle()](#doOnLifecycle)
-+ [40. doOnTerminate() & doAfterTerminate()](#doOnTerminate)
-+ [41. doFinally()](#doFinally)
-+ [42. onErrorReturn()](#onErrorReturn)
-+ [43. onErrorResumeNext()](#onErrorResumeNext)
-+ [44. onExceptionResumeNext()](#onExceptionResumeNext)
++ [32. doOnEach()](#dooneach)
++ [33. doOnNext()](#doonnext)
++ [34. doAfterNext()](#doafternext)
++ [35. doOnComplete()](#dooncomplete)
++ [36. doOnError()](#doonerror)
++ [37. doOnSubscribe()](#doonsubscribe)
++ [38. doOnDispose()](#doondispose)
++ [39. doOnLifecycle()](#doonlifecycle)
++ [40. doOnTerminate() & doAfterTerminate()](#doonterminate)
++ [41. doFinally()](#dofinally)
++ [42. onErrorReturn()](#onerrorreturn)
++ [43. onErrorResumeNext()](#onerrorresumenext)
++ [44. onExceptionResumeNext()](#onexceptionresumenext)
 + [45. retry()](#retry)
-+ [46. retryUntil()](#retryUntil)
-+ [47. retryWhen()](#retryWhen)
++ [46. retryUntil()](#retryuntil)
++ [47. retryWhen()](#retrywhen)
 + [48. repeat()](#repeat)
-+ [49. repeatWhen()](#repeatWhen)
-+ [50. subscribeOn()](#subscribeOn)
-+ [51. observeOn()](#observeOn)
++ [49. repeatWhen()](#repeatwhen)
++ [50. subscribeOn()](#subscribeon)
++ [51. observeOn()](#observeon)
 + [52. filter()](#filter)
-+ [53. ofType()](#ofType)
++ [53. ofType()](#oftype)
 + [54. skip()](#skip)
 + [55. distinct()](#distinct)
-+ [56. distinctUntilChanged()](#distinctUntilChanged)
++ [56. distinctUntilChanged()](#distinctuntilchanged)
 + [57. take()](#take)
 + [58. debounce()](#debounce)
-+ [59. firstElement() && lastElement()](#firstElement)
-+ [60. elementAt() & elementAtOrError()](#elementAt)
++ [59. firstElement() && lastElement()](#firstelement)
++ [60. elementAt() & elementAtOrError()](#elementat)
 + [61. all()](#all)
-+ [62. takeWhile()](#takeWhile)
-+ [63. skipWhile()](#skipWhile)
-+ [64. takeUntil()](#takeUntil)
-+ [65. skipUntil()](#skipUntil)
-+ [66. sequenceEqual()](#sequenceEqual)
++ [62. takeWhile()](#takewhile)
++ [63. skipWhile()](#skipwhile)
++ [64. takeUntil()](#takeuntil)
++ [65. skipUntil()](#skipuntil)
++ [66. sequenceEqual()](#sequenceequal)
 + [67. contains()](#contains)
-+ [68. isEmpty()](#isEmpty)
++ [68. isEmpty()](#isempty)
 + [69. amb()](#amb)
-+ [70. defaultIfEmpty()](#defaultIfEmpty)
++ [70. defaultIfEmpty()](#defaultifempty)
 ---
 ### 创建操作符
 
@@ -215,7 +215,7 @@ Observable.just(1, 2, 3)
 11-06 16:07:24.291 25045-25045/com.css.rxjava D/RxJava: =================onComplete
 ```
 
-<span id="fromArray">
+<span id="fromarray">
 
 ### 3. fromArray()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -259,7 +259,7 @@ Observable.fromArray(array)
 11-06 16:08:56.401 26163-26163/com.css.rxjava D/RxJava: =================onComplete
 ```
 
-<span id="fromCallable">
+<span id="fromcallable">
 
 ### 4. fromCallable()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：这里的 Callable 是 java.util.concurrent 中的 Callable，Callable 和 Runnable 的用法基本一致，只是它会返回一个结果值，这个结果值就是发给观察者的。**<br>
@@ -287,7 +287,7 @@ Observable.fromCallable(new Callable<Integer>() {
 11-06 17:56:40.001 27747-27747/com.css.rxjava D/RxJava: ================accept 1
 ```
 
-<span id="fromFuture">
+<span id="fromfuture">
 
 ### 5. fromFuture()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：参数中的 Future 是 java.util.concurrent 中的 Future，Future 的作用是增加了 cancel() 等方法操作 Callable，它可以通过 get() 方法来获取 Callable 返回的值。**<br>
@@ -324,7 +324,7 @@ Observable.fromFuture(futureTask)
 11-06 17:58:41.181 29584-29584/com.css.rxjava D/RxJava: ================accept 返回结果
 ```
 
-<span id="fromIterable">
+<span id="fromiterable">
 
 ### 6. fromIterable()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：直接发送一个 List 集合数据给观察者**<br>
@@ -496,7 +496,7 @@ Observable.interval(4, TimeUnit.SECONDS)
 11-06 18:15:52.301 31087-31114/com.css.rxjava D/RxJava: ==============onNext 3
 ```
 
-<span id="intervalRange">
+<span id="intervalrange">
 
 ### 10. intervalRange()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：可以指定发送事件的开始值和数量，其他与 interval() 的功能一样。**<br>
@@ -579,7 +579,7 @@ Observable.range(2, 5)
 11-06 18:19:45.541 31540-31540/com.css.rxjava D/RxJava: ==============onNext 6
 ```
 
-<span id="rangeLong">
+<span id="rangelong">
 
 ### 12. rangeLong()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：作用与 range() 一样，只是数据类型为 Long**<br>
@@ -658,7 +658,7 @@ s
 s
 ```
 
-<span id="flatMap">
+<span id="flatmap">
 
 ### 15. flatMap()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -675,7 +675,7 @@ s
 s
 ```
 
-<span id="concatMap">
+<span id="concatmap">
 
 ### 16. concatMap()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -709,7 +709,7 @@ s
 s
 ```
 
-<span id="groupBy">
+<span id="groupby">
 
 ### 18. groupBy()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -778,7 +778,7 @@ s
 s
 ```
 
-<span id="concatArray">
+<span id="concatarray">
 
 ### 22. concatArray()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -812,7 +812,7 @@ s
 s
 ```
 
-<span id="concatArrayDelayError">
+<span id="concatarraydelayerror">
 
 ### 24. concatArrayDelayError() & mergeArrayDelayError()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -846,7 +846,7 @@ s
 s
 ```
 
-<span id="combineLatest">
+<span id="combinelatest">
 
 ### 26. combineLatest() & combineLatestDelayError()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -897,7 +897,7 @@ s
 s
 ```
 
-<span id="startWith">
+<span id="startwith">
 
 ### 29. startWith() & startWithArray()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -949,7 +949,7 @@ s
 s
 ```
 
-<span id="doOnEach">
+<span id="dooneach">
 
 ### 32. doOnEach()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -966,7 +966,7 @@ s
 s
 ```
 
-<span id="doOnNext">
+<span id="doonnext">
 
 ### 33. doOnNext()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -983,7 +983,7 @@ s
 s
 ```
 
-<span id="doAfterNext">
+<span id="doafternext">
 
 ### 34. doAfterNext()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1000,7 +1000,7 @@ s
 s
 ```
 
-<span id="doOnComplete">
+<span id="dooncomplete">
 
 ### 35. doOnComplete()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1017,7 +1017,7 @@ s
 s
 ```
 
-<span id="doOnError">
+<span id="doonerror">
 
 ### 36. doOnError()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1034,7 +1034,7 @@ s
 s
 ```
 
-<span id="doOnSubscribe">
+<span id="doonsubscribe">
 
 ### 37. doOnSubscribe()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1051,7 +1051,7 @@ s
 s
 ```
 
-<span id="doOnDispose">
+<span id="doondispose">
 
 ### 38. doOnDispose()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1068,7 +1068,7 @@ s
 s
 ```
 
-<span id="doOnLifecycle">
+<span id="doonlifecycle">
 
 ### 39. doOnLifecycle()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1085,7 +1085,7 @@ s
 s
 ```
 
-<span id="doOnTerminate">
+<span id="doonterminate">
 
 ### 40. doOnTerminate() & doAfterTerminate()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1102,7 +1102,7 @@ s
 s
 ```
 
-<span id="doFinally">
+<span id="dofinally">
 
 ### 41. doFinally()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1119,7 +1119,7 @@ s
 s
 ```
 
-<span id="onErrorReturn">
+<span id="onerrorreturn">
 
 ### 42. onErrorReturn()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1136,7 +1136,7 @@ s
 s
 ```
 
-<span id="onErrorResumeNext">
+<span id="onerrorresumenext">
 
 ### 43. onErrorResumeNext()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1153,7 +1153,7 @@ s
 s
 ```
 
-<span id="onExceptionResumeNext">
+<span id="onexceptionresumenext">
 
 ### 44. onExceptionResumeNext()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1187,7 +1187,7 @@ s
 s
 ```
 
-<span id="retryUntil">
+<span id="retryuntil">
 
 ### 46. retryUntil()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1204,7 +1204,7 @@ s
 s
 ```
 
-<span id="retryWhen">
+<span id="retrywhen">
 
 ### 47. retryWhen()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1238,7 +1238,7 @@ s
 s
 ```
 
-<span id="repeatWhen">
+<span id="repeatwhen">
 
 ### 49. repeatWhen()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1255,7 +1255,7 @@ s
 s
 ```
 
-<span id="subscribeOn">
+<span id="subscribeon">
 
 ### 50. subscribeOn()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1272,7 +1272,7 @@ s
 s
 ```
 
-<span id="observeOn">
+<span id="observeon">
 
 ### 51. observeOn()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1307,7 +1307,7 @@ s
 s
 ```
 
-<span id="ofType">
+<span id="oftype">
 
 ### 53. ofType()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1358,7 +1358,7 @@ s
 s
 ```
 
-<span id="distinctUntilChanged">
+<span id="distinctuntilchanged">
 
 ### 56. distinctUntilChanged()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1409,7 +1409,7 @@ s
 s
 ```
 
-<span id="firstElement">
+<span id="firstelement">
 
 ### 59. firstElement() && lastElement()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1426,7 +1426,7 @@ s
 s
 ```
 
-<span id="elementAt">
+<span id="elementat">
 
 ### 60. elementAt() & elementAtOrError()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1461,7 +1461,7 @@ s
 s
 ```
 
-<span id="takeWhile">
+<span id="takewhile">
 
 ### 62. takeWhile()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1478,7 +1478,7 @@ s
 s
 ```
 
-<span id="skipWhile">
+<span id="skipwhile">
 
 ### 63. skipWhile()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1495,7 +1495,7 @@ s
 s
 ```
 
-<span id="takeUntil">
+<span id="takeuntil">
 
 ### 64. takeUntil()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1512,7 +1512,7 @@ s
 s
 ```
 
-<span id="skipUntil">
+<span id="skipuntil">
 
 ### 65. skipUntil()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1529,7 +1529,7 @@ s
 s
 ```
 
-<span id="sequenceEqual">
+<span id="sequenceequal">
 
 ### 66. sequenceEqual()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1563,7 +1563,7 @@ s
 s
 ```
 
-<span id="isEmpty">
+<span id="isempty">
 
 ### 68. isEmpty()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
@@ -1599,7 +1599,7 @@ s
 
 <span id="defaultIfEmpty">
 
-### 70. defaultIfEmpty()
+### 70. defaultifempty()
 > **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
 > **方法预览：**
 ```
