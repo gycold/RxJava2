@@ -3513,9 +3513,9 @@ ArrayList<Observable<Long>> list = new ArrayList<>();
 11-07 16:52:03.351 28077-28108/com.css.rxjava D/RxJava: ========================aLong 10
 ```
 
-<span id="defaultIfEmpty">
+<span id="defaultifempty">
 
-### 70. defaultifempty()
+### 70. defaultIfEmpty()
 > **方法作用：**<br>如果观察者只发送一个 onComplete() 事件，则可以利用这个方法发送一个值。<br><br>
 > **方法预览：**
 ```
