@@ -790,7 +790,8 @@ Observable.fromIterable(personList)
 <span id="concatmap">
 
 ### 16. concatMap()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>concatMap() 和 flatMap() 基本上是一样的，只不过 concatMap() 转发出来的事件是有序的，而 flatMap() 是无序的。<br>
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+&#8195;&#8195;&#8195;&#8195;&#8195;concatMap() 和 flatMap() 基本上是一样的，只不过 concatMap() 转发出来的事件是有序的，而 flatMap() 是无序的。<br>
 > **方法预览：**
 ```
 public final <R> Observable<R> concatMap(Function<? super T, ? extends ObservableSource<? extends R>> mapper)
