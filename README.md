@@ -129,7 +129,7 @@ observable.subscribe(observer);
 <span id="create">
 
 ### 1. create()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>创建一个被观察者
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>创建一个被观察者<br>
 > **方法预览：**
 ```
 public static <T> Observable<T> create(ObservableOnSubscribe<T> source)
@@ -173,7 +173,7 @@ observable.subscribe(observer);
 <span id="just">
 
 ### 2. just()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>创建一个被观察者，并发送事件，发送的事件不可以超过10个以上。
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>创建一个被观察者，并发送事件，发送的事件不可以超过10个以上。<br>
 > **方法预览：**
 ```
 public static <T> Observable<T> just(T item)
@@ -218,7 +218,7 @@ Observable.just(1, 2, 3)
 <span id="fromarray">
 
 ### 3. fromArray()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>这个方法和 just() 类似，只不过 fromArray 可以传入多于10个的变量，并且可以传入一个数组。
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>这个方法和 just() 类似，只不过 fromArray 可以传入多于10个的变量，并且可以传入一个数组。<br>
 > **方法预览：**
 ```
 public static <T> Observable<T> fromArray(T... items)
@@ -262,7 +262,7 @@ Observable.fromArray(array)
 <span id="fromcallable">
 
 ### 4. fromCallable()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>这里的 Callable 是 java.util.concurrent 中的 Callable，Callable 和 Runnable 的用法基本一致，只是它会返回一个结果值，这个结果值就是发给观察者的。
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>这里的 Callable 是 java.util.concurrent 中的 Callable，Callable 和 Runnable 的用法基本一致，只是它会返回一个结果值，这个结果值就是发给观察者的。<br>
 > **方法预览：**
 ```
 public static <T> Observable<T> fromCallable(Callable<? extends T> supplier)
@@ -290,7 +290,7 @@ Observable.fromCallable(new Callable<Integer>() {
 <span id="fromfuture">
 
 ### 5. fromFuture()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>参数中的 Future 是 java.util.concurrent 中的 Future，Future 的作用是增加了 cancel() 等方法操作 Callable，它可以通过 get() 方法来获取 Callable 返回的值。
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>参数中的 Future 是 java.util.concurrent 中的 Future，Future 的作用是增加了 cancel() 等方法操作 Callable，它可以通过 get() 方法来获取 Callable 返回的值。<br>
 > **方法预览：**
 ```
 public static <T> Observable<T> fromFuture(Future<? extends T> future)
@@ -327,7 +327,7 @@ Observable.fromFuture(futureTask)
 <span id="fromiterable">
 
 ### 6. fromIterable()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>直接发送一个 List 集合数据给观察者
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>直接发送一个 List 集合数据给观察者<br>
 > **方法预览：**
 ```
 public static <T> Observable<T> fromIterable(Iterable<? extends T> source)
@@ -375,7 +375,7 @@ Observable.fromIterable(list)
 <span id="defer">
 
 ### 7. defer()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>这个方法的作用就是直到被观察者被订阅后才会创建被观察者。
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>这个方法的作用就是直到被观察者被订阅后才会创建被观察者。<br>
 > **方法预览：**
 ```
 public static <T> Observable<T> defer(Callable<? extends ObservableSource<? extends T>> supplier)
@@ -422,7 +422,7 @@ observable.subscribe(observer);
 <span id="timer">
 
 ### 8. timer()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>当到指定时间后就会发送一个 0L 的值给观察者。
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>当到指定时间后就会发送一个 0L 的值给观察者。<br>
 > **方法预览：**
 ```
 public static Observable<Long> timer(long delay, TimeUnit unit)
@@ -458,7 +458,7 @@ Observable.timer(2, TimeUnit.SECONDS)
 <span id="interval">
 
 ### 9. interval()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>每隔一段时间就会发送一个事件，这个事件是从0开始，不断增1的数字。
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>每隔一段时间就会发送一个事件，这个事件是从0开始，不断增1的数字。<br>
 > **方法预览：**
 ```
 public static Observable<Long> interval(long period, TimeUnit unit)
@@ -499,7 +499,7 @@ Observable.interval(4, TimeUnit.SECONDS)
 <span id="intervalrange">
 
 ### 10. intervalRange()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>可以指定发送事件的开始值和数量，其他与 interval() 的功能一样。
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>可以指定发送事件的开始值和数量，其他与 interval() 的功能一样。<br>
 > **方法预览：**
 ```
 public static Observable<Long> intervalRange(long start, long count, long initialDelay, long period, TimeUnit unit)
@@ -541,7 +541,7 @@ Observable.intervalRange(2, 5, 2, 1, TimeUnit.SECONDS)
 <span id="range">
 
 ### 11. range()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>同时发送一定范围的事件序列。
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>同时发送一定范围的事件序列。<br>
 > **方法预览：**
 ```
 public static Observable<Integer> range(final int start, final int count)
@@ -582,7 +582,7 @@ Observable.range(2, 5)
 <span id="rangelong">
 
 ### 12. rangeLong()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>作用与 range() 一样，只是数据类型为 Long
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>作用与 range() 一样，只是数据类型为 Long<br>
 > **方法预览：**
 ```
 public static Observable<Long> rangeLong(long start, long count)
@@ -644,7 +644,7 @@ Observable.empty()
 <span id="map">
 
 ### 14. map()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>map 可以将被观察者发送的数据类型转变成其他的类型
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>map 可以将被观察者发送的数据类型转变成其他的类型<br>
 > **方法预览：**
 ```
 public final <R> Observable<R> map(Function<? super T, ? extends R> mapper)
@@ -689,7 +689,7 @@ Observable.just(1, 2, 3)
 <span id="flatmap">
 
 ### 15. flatMap()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>这个方法可以将事件序列中的元素进行整合加工，返回一个新的被观察者。
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>这个方法可以将事件序列中的元素进行整合加工，返回一个新的被观察者。<br>
 > **方法预览：**
 ```
 public final <R> Observable<R> flatMap(Function<? super T, ? extends ObservableSource<? extends R>> mapper)
@@ -790,7 +790,7 @@ Observable.fromIterable(personList)
 <span id="concatmap">
 
 ### 16. concatMap()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>concatMap() 和 flatMap() 基本上是一样的，只不过 concatMap() 转发出来的事件是有序的，而 flatMap() 是无序的。
+> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>concatMap() 和 flatMap() 基本上是一样的，只不过 concatMap() 转发出来的事件是有序的，而 flatMap() 是无序的。<br>
 > **方法预览：**
 ```
 public final <R> Observable<R> concatMap(Function<? super T, ? extends ObservableSource<? extends R>> mapper)
