@@ -1,8 +1,8 @@
 #  RxJava2 操作一览
 ---
 ## 一、基本元素
-+ 被观察者（Observable）<br>
-+ 观察者（Observer）<br>
++ 被观察者（Observable）
++ 观察者（Observer）
 + 订阅（subscribe）
 ---
 ## 二、使用步骤
@@ -46,7 +46,7 @@ observable.subscribe(observer);
 ```
 ---
 ## 三、被观察者发送的事件
-| 事件种类 | 作用 |
+| 事件种类 | 方法作用 |
 | :--- | :--- |
 | onNext() | 发送该事件时，观察者会回调 onNext() 方法 |
 | onError() | 发送该事件时，观察者会回调 onError() 方法，当发送该事件之后，其他事件将不会继续发送|
@@ -129,7 +129,7 @@ observable.subscribe(observer);
 <span id="create">
 
 ### 1. create()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>创建一个被观察者<br>
+> **方法作用：**<br>创建一个被观察者<br><br>
 > **方法预览：**
 ```
 public static <T> Observable<T> create(ObservableOnSubscribe<T> source)
@@ -173,7 +173,7 @@ observable.subscribe(observer);
 <span id="just">
 
 ### 2. just()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>创建一个被观察者，并发送事件，发送的事件不可以超过10个以上。<br>
+> **方法作用：**<br>创建一个被观察者，并发送事件，发送的事件不可以超过10个以上。<br><br>
 > **方法预览：**
 ```
 public static <T> Observable<T> just(T item)
@@ -218,7 +218,7 @@ Observable.just(1, 2, 3)
 <span id="fromarray">
 
 ### 3. fromArray()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>这个方法和 just() 类似，只不过 fromArray 可以传入多于10个的变量，并且可以传入一个数组。<br>
+> **方法作用：**<br>这个方法和 just() 类似，只不过 fromArray 可以传入多于10个的变量，并且可以传入一个数组。<br><br>
 > **方法预览：**
 ```
 public static <T> Observable<T> fromArray(T... items)
@@ -262,7 +262,7 @@ Observable.fromArray(array)
 <span id="fromcallable">
 
 ### 4. fromCallable()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>这里的 Callable 是 java.util.concurrent 中的 Callable，Callable 和 Runnable 的用法基本一致，只是它会返回一个结果值，这个结果值就是发给观察者的。<br>
+> **方法作用：**<br>这里的 Callable 是 java.util.concurrent 中的 Callable，Callable 和 Runnable 的用法基本一致，只是它会返回一个结果值，这个结果值就是发给观察者的。<br><br>
 > **方法预览：**
 ```
 public static <T> Observable<T> fromCallable(Callable<? extends T> supplier)
@@ -290,7 +290,7 @@ Observable.fromCallable(new Callable<Integer>() {
 <span id="fromfuture">
 
 ### 5. fromFuture()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>参数中的 Future 是 java.util.concurrent 中的 Future，Future 的作用是增加了 cancel() 等方法操作 Callable，它可以通过 get() 方法来获取 Callable 返回的值。<br>
+> **方法作用：**<br>参数中的 Future 是 java.util.concurrent 中的 Future，Future 的作用是增加了 cancel() 等方法操作 Callable，它可以通过 get() 方法来获取 Callable 返回的值。<br><br>
 > **方法预览：**
 ```
 public static <T> Observable<T> fromFuture(Future<? extends T> future)
@@ -327,7 +327,7 @@ Observable.fromFuture(futureTask)
 <span id="fromiterable">
 
 ### 6. fromIterable()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>直接发送一个 List 集合数据给观察者<br>
+> **方法作用：**<br>直接发送一个 List 集合数据给观察者<br><br>
 > **方法预览：**
 ```
 public static <T> Observable<T> fromIterable(Iterable<? extends T> source)
@@ -375,7 +375,7 @@ Observable.fromIterable(list)
 <span id="defer">
 
 ### 7. defer()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>这个方法的作用就是直到被观察者被订阅后才会创建被观察者。<br>
+> **方法作用：**<br>这个方法的方法作用就是直到被观察者被订阅后才会创建被观察者。<br><br>
 > **方法预览：**
 ```
 public static <T> Observable<T> defer(Callable<? extends ObservableSource<? extends T>> supplier)
@@ -422,7 +422,7 @@ observable.subscribe(observer);
 <span id="timer">
 
 ### 8. timer()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>当到指定时间后就会发送一个 0L 的值给观察者。<br>
+> **方法作用：**<br>当到指定时间后就会发送一个 0L 的值给观察者。<br><br>
 > **方法预览：**
 ```
 public static Observable<Long> timer(long delay, TimeUnit unit)
@@ -458,7 +458,7 @@ Observable.timer(2, TimeUnit.SECONDS)
 <span id="interval">
 
 ### 9. interval()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>每隔一段时间就会发送一个事件，这个事件是从0开始，不断增1的数字。<br>
+> **方法作用：**<br>每隔一段时间就会发送一个事件，这个事件是从0开始，不断增1的数字。<br><br>
 > **方法预览：**
 ```
 public static Observable<Long> interval(long period, TimeUnit unit)
@@ -499,7 +499,7 @@ Observable.interval(4, TimeUnit.SECONDS)
 <span id="intervalrange">
 
 ### 10. intervalRange()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>可以指定发送事件的开始值和数量，其他与 interval() 的功能一样。<br>
+> **方法作用：**<br>可以指定发送事件的开始值和数量，其他与 interval() 的功能一样。<br><br>
 > **方法预览：**
 ```
 public static Observable<Long> intervalRange(long start, long count, long initialDelay, long period, TimeUnit unit)
@@ -541,7 +541,7 @@ Observable.intervalRange(2, 5, 2, 1, TimeUnit.SECONDS)
 <span id="range">
 
 ### 11. range()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>同时发送一定范围的事件序列。<br>
+> **方法作用：**<br>同时发送一定范围的事件序列。<br><br>
 > **方法预览：**
 ```
 public static Observable<Integer> range(final int start, final int count)
@@ -582,7 +582,7 @@ Observable.range(2, 5)
 <span id="rangelong">
 
 ### 12. rangeLong()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>作用与 range() 一样，只是数据类型为 Long<br>
+> **方法作用：**<br>方法作用与 range() 一样，只是数据类型为 Long<br><br>
 > **方法预览：**
 ```
 public static Observable<Long> rangeLong(long start, long count)
@@ -599,10 +599,10 @@ public static Observable<Long> rangeLong(long start, long count)
 <span id="empty">
 
 ### 13. empty() & never() & error()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br>
 + empty() ：直接发送 onComplete() 事件
 + never()：不发送任何事件
-+ error()：发送 onError() 事件<br>
++ error()：发送 onError() 事件<br><br>
 > **方法预览：**
 ```
 public static <T> Observable<T> empty()
@@ -644,12 +644,12 @@ Observable.empty()
 <span id="map">
 
 ### 14. map()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>map 可以将被观察者发送的数据类型转变成其他的类型<br>
+> **方法作用：**<br>map 可以将被观察者发送的数据类型转变成其他的类型<br><br>
 > **方法预览：**
 ```
 public final <R> Observable<R> map(Function<? super T, ? extends R> mapper)
 ```
-> **方法使用：**<br>以下代码将 Integer 类型的数据转换成 String。
+> **方法使用：**<br><br>以下代码将 Integer 类型的数据转换成 String。
 ```
 Observable.just(1, 2, 3)
         .map(new Function<Integer, String>() {
@@ -689,7 +689,7 @@ Observable.just(1, 2, 3)
 <span id="flatmap">
 
 ### 15. flatMap()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>这个方法可以将事件序列中的元素进行整合加工，返回一个新的被观察者。<br>
+> **方法作用：**<br>这个方法可以将事件序列中的元素进行整合加工，返回一个新的被观察者。<br><br>
 > **方法预览：**
 ```
 public final <R> Observable<R> flatMap(Function<? super T, ? extends ObservableSource<? extends R>> mapper)
@@ -790,7 +790,7 @@ Observable.fromIterable(personList)
 <span id="concatmap">
 
 ### 16. concatMap()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>concatMap() 和 flatMap() 基本上是一样的，只不过 concatMap() 转发出来的事件是有序的，而 flatMap() 是无序的。<br><br>
+> **方法作用：**<br>concatMap() 和 flatMap() 基本上是一样的，只不过 concatMap() 转发出来的事件是有序的，而 flatMap() 是无序的。<br><br>
 > **方法预览：**
 ```
 public final <R> Observable<R> concatMap(Function<? super T, ? extends ObservableSource<? extends R>> mapper)
@@ -838,7 +838,7 @@ Observable.fromIterable(personList)
 <span id="buffer">
 
 ### 17. buffer()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -855,7 +855,7 @@ s
 <span id="groupby">
 
 ### 18. groupBy()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -872,7 +872,7 @@ s
 <span id="scan">
 
 ### 19. scan()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -889,7 +889,7 @@ s
 <span id="window">
 
 ### 20. window()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -907,7 +907,7 @@ s
 <span id="concat">
 
 ### 21. concat()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -924,7 +924,7 @@ s
 <span id="concatarray">
 
 ### 22. concatArray()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -941,7 +941,7 @@ s
 <span id="merge">
 
 ### 23. merge()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -958,7 +958,7 @@ s
 <span id="concatarraydelayerror">
 
 ### 24. concatArrayDelayError() & mergeArrayDelayError()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -975,7 +975,7 @@ s
 <span id="zip">
 
 ### 25. zip()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -992,7 +992,7 @@ s
 <span id="combinelatest">
 
 ### 26. combineLatest() & combineLatestDelayError()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1009,7 +1009,7 @@ s
 <span id="reduce">
 
 ### 27. reduce()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1026,7 +1026,7 @@ s
 <span id="collect">
 
 ### 28. collect()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1043,7 +1043,7 @@ s
 <span id="startwith">
 
 ### 29. startWith() & startWithArray()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1060,7 +1060,7 @@ s
 <span id="count">
 
 ### 30. count()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1078,7 +1078,7 @@ s
 <span id="delay">
 
 ### 31. delay()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1095,7 +1095,7 @@ s
 <span id="dooneach">
 
 ### 32. doOnEach()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1112,7 +1112,7 @@ s
 <span id="doonnext">
 
 ### 33. doOnNext()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1129,7 +1129,7 @@ s
 <span id="doafternext">
 
 ### 34. doAfterNext()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1146,7 +1146,7 @@ s
 <span id="dooncomplete">
 
 ### 35. doOnComplete()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1163,7 +1163,7 @@ s
 <span id="doonerror">
 
 ### 36. doOnError()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1180,7 +1180,7 @@ s
 <span id="doonsubscribe">
 
 ### 37. doOnSubscribe()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1197,7 +1197,7 @@ s
 <span id="doondispose">
 
 ### 38. doOnDispose()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1214,7 +1214,7 @@ s
 <span id="doonlifecycle">
 
 ### 39. doOnLifecycle()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1231,7 +1231,7 @@ s
 <span id="doonterminate">
 
 ### 40. doOnTerminate() & doAfterTerminate()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1248,7 +1248,7 @@ s
 <span id="dofinally">
 
 ### 41. doFinally()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1265,7 +1265,7 @@ s
 <span id="onerrorreturn">
 
 ### 42. onErrorReturn()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1282,7 +1282,7 @@ s
 <span id="onerrorresumenext">
 
 ### 43. onErrorResumeNext()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1299,7 +1299,7 @@ s
 <span id="onexceptionresumenext">
 
 ### 44. onExceptionResumeNext()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1316,7 +1316,7 @@ s
 <span id="retry">
 
 ### 45. retry()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1333,7 +1333,7 @@ s
 <span id="retryuntil">
 
 ### 46. retryUntil()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1350,7 +1350,7 @@ s
 <span id="retrywhen">
 
 ### 47. retryWhen()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1367,7 +1367,7 @@ s
 <span id="repeat">
 
 ### 48. repeat()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1384,7 +1384,7 @@ s
 <span id="repeatwhen">
 
 ### 49. repeatWhen()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1401,7 +1401,7 @@ s
 <span id="subscribeon">
 
 ### 50. subscribeOn()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1418,7 +1418,7 @@ s
 <span id="observeon">
 
 ### 51. observeOn()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1436,7 +1436,7 @@ s
 <span id="filter">
 
 ### 52. filter()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1453,7 +1453,7 @@ s
 <span id="oftype">
 
 ### 53. ofType()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1470,7 +1470,7 @@ s
 <span id="skip">
 
 ### 54. skip()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1487,7 +1487,7 @@ s
 <span id="distinct">
 
 ### 55. distinct()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1504,7 +1504,7 @@ s
 <span id="distinctuntilchanged">
 
 ### 56. distinctUntilChanged()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1521,7 +1521,7 @@ s
 <span id="take">
 
 ### 57. take()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1538,7 +1538,7 @@ s
 <span id="debounce">
 
 ### 58. debounce()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1555,7 +1555,7 @@ s
 <span id="firstelement">
 
 ### 59. firstElement() && lastElement()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1572,7 +1572,7 @@ s
 <span id="elementat">
 
 ### 60. elementAt() & elementAtOrError()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1590,7 +1590,7 @@ s
 <span id="all">
 
 ### 61. all()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1607,7 +1607,7 @@ s
 <span id="takewhile">
 
 ### 62. takeWhile()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1624,7 +1624,7 @@ s
 <span id="skipwhile">
 
 ### 63. skipWhile()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1641,7 +1641,7 @@ s
 <span id="takeuntil">
 
 ### 64. takeUntil()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1658,7 +1658,7 @@ s
 <span id="skipuntil">
 
 ### 65. skipUntil()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1675,7 +1675,7 @@ s
 <span id="sequenceequal">
 
 ### 66. sequenceEqual()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1692,7 +1692,7 @@ s
 <span id="contains">
 
 ### 67. contains()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1709,7 +1709,7 @@ s
 <span id="isempty">
 
 ### 68. isEmpty()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1726,7 +1726,7 @@ s
 <span id="amb">
 
 ### 69. amb()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
@@ -1743,7 +1743,7 @@ s
 <span id="defaultIfEmpty">
 
 ### 70. defaultifempty()
-> **作用&#160;&#160;&#160;&#160;&#160;&#160;&#160;：**<br>
+> **方法作用：**<br><br>
 > **方法预览：**
 ```
 s
