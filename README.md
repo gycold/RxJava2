@@ -75,7 +75,7 @@ observable.subscribe(observer);
 + [20. window()](#window)
 + [21. concat()](#concat)
 + [22. concatArray()](#concatarray)
-+ [23. merge()](#merge)
++ [23. merge() & mergeArray()](#merge)
 + [24. concatArrayDelayError() & mergeArrayDelayError()](#concatarraydelayerror)
 + [25. zip()](#zip)
 + [26. combineLatest() & combineLatestDelayError()](#combinelatest)
@@ -1150,17 +1150,48 @@ public static <T> Observable<T> concatArray(ObservableSource<? extends T>... sou
 ```
 > **方法使用：**
 ```
-s
+Observable.concatArray(Observable.just(1, 2),
+        Observable.just(3, 4),
+        Observable.just(5, 6),
+        Observable.just(7, 8),
+        Observable.just(9, 10))
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+================onNext 1
+================onNext 2
+================onNext 3
+================onNext 4
+================onNext 5
+================onNext 6
+================onNext 7
+================onNext 8
+================onNext 9
+================onNext 10
 ```
 
 <span id="merge">
 
-### 23. merge()
-> **方法作用：**<br>这个方法与 concat() 作用基本一样，区别是 concat() 是串行发送事件，而 merge() 是并行发送事件。<br><br>
+### 23. merge() & mergeArray()
+> **方法作用：**<br>这个方法与 concat() 作用基本一样，区别是 concat() 是串行发送事件，而 merge() 是并行发送事件。mergeArray() 与 merge() 的作用是一样的，只是它可以发送4个以上的被观察者，这里就不再赘述了。<br><br>
 > **方法预览：**
 ```
 public static <T> Observable<T> merge(ObservableSource<? extends T> source1, ObservableSource<? extends T> source2, ObservableSource<? extends T> source3, ObservableSource<? extends T> source4)
@@ -1168,11 +1199,47 @@ public static <T> Observable<T> merge(ObservableSource<? extends T> source1, Obs
 ```
 > **方法使用：**
 ```
-s
+Observable.merge(
+        Observable.interval(1, TimeUnit.SECONDS).map(new Function<Long, String>() {
+            @Override
+            public String apply(Long aLong) throws Exception {
+                return "A" + aLong;
+            }
+        }),
+        Observable.interval(1, TimeUnit.SECONDS).map(new Function<Long, String>() {
+            @Override
+            public String apply(Long aLong) throws Exception {
+                return "B" + aLong;
+            }
+        }))
+        .subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.d(TAG, "=====================onNext " + s);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 15:09:15.771 16325-16385/com.css.rxjava D/RxJava: =====================onNext A0
+11-07 15:09:15.771 16325-16386/com.css.rxjava D/RxJava: =====================onNext B0
+11-07 15:09:16.771 16325-16385/com.css.rxjava D/RxJava: =====================onNext A1
+11-07 15:09:16.771 16325-16386/com.css.rxjava D/RxJava: =====================onNext B1
+11-07 15:09:17.771 16325-16385/com.css.rxjava D/RxJava: =====================onNext A2
+11-07 15:09:17.771 16325-16386/com.css.rxjava D/RxJava: =====================onNext B2
+......
 ```
 
 <span id="concatarraydelayerror">
@@ -1186,11 +1253,38 @@ public static <T> Observable<T> mergeArrayDelayError(ObservableSource<? extends 
 ```
 > **方法使用：**
 ```
-s
+Observable.concatArray(
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                e.onNext(1);
+                e.onError(new NumberFormatException());
+            }
+        }), Observable.just(2, 3, 4))
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "===================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "===================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 15:14:07.001 17348-17348/com.css.rxjava D/RxJava: ===================onNext 1
+11-07 15:14:07.001 17348-17348/com.css.rxjava D/RxJava: ===================onError
 ```
 
 <span id="zip">
@@ -1204,11 +1298,71 @@ public static <T1, T2, R> Observable<R> zip(ObservableSource<? extends T1> sourc
 ```
 > **方法使用：**
 ```
-s
+Observable.zip(Observable.intervalRange(1, 5, 1, 1, TimeUnit.SECONDS)
+                .map(new Function<Long, String>() {
+                    @Override
+                    public String apply(Long aLong) throws Exception {
+                        String s1 = "A" + aLong;
+                        Log.d(TAG, "===================A 发送的事件 " + s1);
+                        return s1;
+                    }
+                }),
+        Observable.intervalRange(1, 6, 1, 1, TimeUnit.SECONDS)
+                .map(new Function<Long, String>() {
+                    @Override
+                    public String apply(Long aLong) throws Exception {
+                        String s2 = "B" + aLong;
+                        Log.d(TAG, "===================B 发送的事件 " + s2);
+                        return s2;
+                    }
+                }),
+        new BiFunction<String, String, String>() {
+            @Override
+            public String apply(String s, String s2) throws Exception {
+                String res = s + s2;
+                return res;
+            }
+        })
+        .subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "===================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.d(TAG, "===================onNext " + s);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "===================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "===================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 15:15:25.241 17578-17605/com.css.rxjava D/RxJava: ===================A 发送的事件 A1
+11-07 15:15:25.241 17578-17606/com.css.rxjava D/RxJava: ===================B 发送的事件 B1
+11-07 15:15:25.251 17578-17606/com.css.rxjava D/RxJava: ===================onNext A1B1
+11-07 15:15:26.241 17578-17605/com.css.rxjava D/RxJava: ===================A 发送的事件 A2
+11-07 15:15:26.241 17578-17606/com.css.rxjava D/RxJava: ===================B 发送的事件 B2
+11-07 15:15:26.251 17578-17606/com.css.rxjava D/RxJava: ===================onNext A2B2
+11-07 15:15:27.241 17578-17605/com.css.rxjava D/RxJava: ===================A 发送的事件 A3
+11-07 15:15:27.241 17578-17606/com.css.rxjava D/RxJava: ===================B 发送的事件 B3
+11-07 15:15:27.241 17578-17606/com.css.rxjava D/RxJava: ===================onNext A3B3
+11-07 15:15:28.251 17578-17605/com.css.rxjava D/RxJava: ===================A 发送的事件 A4
+11-07 15:15:28.251 17578-17606/com.css.rxjava D/RxJava: ===================B 发送的事件 B4
+11-07 15:15:28.251 17578-17606/com.css.rxjava D/RxJava: ===================onNext A4B4
+11-07 15:15:29.241 17578-17605/com.css.rxjava D/RxJava: ===================A 发送的事件 A5
+11-07 15:15:29.241 17578-17606/com.css.rxjava D/RxJava: ===================B 发送的事件 B5
+11-07 15:15:29.251 17578-17606/com.css.rxjava D/RxJava: ===================onNext A5B5
+11-07 15:15:29.251 17578-17606/com.css.rxjava D/RxJava: ===================onComplete
 ```
 
 <span id="combinelatest">
@@ -1222,28 +1376,115 @@ public static <T1, T2, R> Observable<R> combineLatest(ObservableSource<? extends
 ```
 > **方法使用：**
 ```
-s
+Observable.combineLatest(
+        Observable.intervalRange(1, 4, 1, 1, TimeUnit.SECONDS)
+                .map(new Function<Long, String>() {
+                    @Override
+                    public String apply(Long aLong) throws Exception {
+                        String s1 = "A" + aLong;
+                        Log.d(TAG, "===================A 发送的事件 " + s1);
+                        return s1;
+                    }
+                }),
+        Observable.intervalRange(1, 5, 2, 2, TimeUnit.SECONDS)
+                .map(new Function<Long, String>() {
+                    @Override
+                    public String apply(Long aLong) throws Exception {
+                        String s2 = "B" + aLong;
+                        Log.d(TAG, "===================B 发送的事件 " + s2);
+                        return s2;
+                    }
+                }),
+        new BiFunction<String, String, String>() {
+            @Override
+            public String apply(String s, String s2) throws Exception {
+                String res = s + s2;
+                return res;
+            }
+        })
+        .subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "===================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.d(TAG, "===================最终接收到的事件 " + s);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "===================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "===================onComplete ");
+            }
+        });
 ```
-> **打印结果：**
+> **打印结果：**<br>当发送 A1 事件之后，因为 B 并没有发送任何事件，所以根本不会发生结合。当 B 发送了 B1 事件之后，就会与 A 最近发送的事件 A2 结合成 A2B1，这样只要后面一有被观察者发送事件，这个事件就会与其他被观察者最近发送的事件结合起来。
 ```
-s
+11-07 15:16:42.661 17793-17820/com.css.rxjava D/RxJava: ===================A 发送的事件 A1
+11-07 15:16:43.651 17793-17820/com.css.rxjava D/RxJava: ===================A 发送的事件 A2
+11-07 15:16:43.661 17793-17821/com.css.rxjava D/RxJava: ===================B 发送的事件 B1
+11-07 15:16:43.661 17793-17821/com.css.rxjava D/RxJava: ===================最终接收到的事件 A2B1
+11-07 15:16:44.651 17793-17820/com.css.rxjava D/RxJava: ===================A 发送的事件 A3
+11-07 15:16:44.661 17793-17820/com.css.rxjava D/RxJava: ===================最终接收到的事件 A3B1
+11-07 15:16:45.661 17793-17820/com.css.rxjava D/RxJava: ===================A 发送的事件 A4
+11-07 15:16:45.661 17793-17820/com.css.rxjava D/RxJava: ===================最终接收到的事件 A4B1
+11-07 15:16:45.661 17793-17821/com.css.rxjava D/RxJava: ===================B 发送的事件 B2
+11-07 15:16:45.661 17793-17821/com.css.rxjava D/RxJava: ===================最终接收到的事件 A4B2
+11-07 15:16:47.661 17793-17821/com.css.rxjava D/RxJava: ===================B 发送的事件 B3
+11-07 15:16:47.661 17793-17821/com.css.rxjava D/RxJava: ===================最终接收到的事件 A4B3
+11-07 15:16:49.661 17793-17821/com.css.rxjava D/RxJava: ===================B 发送的事件 B4
+11-07 15:16:49.661 17793-17821/com.css.rxjava D/RxJava: ===================最终接收到的事件 A4B4
+11-07 15:16:51.661 17793-17821/com.css.rxjava D/RxJava: ===================B 发送的事件 B5
+11-07 15:16:51.661 17793-17821/com.css.rxjava D/RxJava: ===================最终接收到的事件 A4B5
+11-07 15:16:51.661 17793-17821/com.css.rxjava D/RxJava: ===================onComplete
 ```
 
 <span id="reduce">
 
 ### 27. reduce()
-> **方法作用：**<br>把所有的操作都操作完成之后在调用一次观察者，把数据一次性输出，与scan的区别：scan是每次操作之后先把数据输出，然后在调用scan的回调函数进行第二次操作<br><br>
+> **方法作用：**<br>把所有的操作都操作完成之后再调用一次观察者，把数据一次性输出，与scan的区别：scan是每次操作之后先把数据输出，然后在调用scan的回调函数进行第二次操作<br><br>
 > **方法预览：**
 ```
 public final Maybe<T> reduce(BiFunction<T, T, T> reducer)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(0, 1, 2, 3)
+        .reduce(new BiFunction<Integer, Integer, Integer>() {
+            @Override
+            public Integer apply(Integer i, Integer j) throws Exception {
+                int res = i + j;
+                Log.d(TAG, "====================i " + i);
+                Log.d(TAG, "====================j " + j);
+                Log.d(TAG, "====================res " + res);
+                return res;
+            }
+        })
+        .subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "==================accept " + integer);
+            }
+        });
 ```
-> **打印结果：**
+> **打印结果：**<br>从结果可以看到，其实就是前2个数据聚合之后，然后再与后1个数据进行聚合，一直到没有数据为止。
 ```
-s
+11-07 15:22:15.311 18629-18629/com.css.rxjava D/RxJava: ====================i 0
+11-07 15:22:15.311 18629-18629/com.css.rxjava D/RxJava: ====================j 1
+11-07 15:22:15.311 18629-18629/com.css.rxjava D/RxJava: ====================res 1
+11-07 15:22:15.311 18629-18629/com.css.rxjava D/RxJava: ====================i 1
+11-07 15:22:15.311 18629-18629/com.css.rxjava D/RxJava: ====================j 2
+11-07 15:22:15.311 18629-18629/com.css.rxjava D/RxJava: ====================res 3
+11-07 15:22:15.311 18629-18629/com.css.rxjava D/RxJava: ====================i 3
+11-07 15:22:15.311 18629-18629/com.css.rxjava D/RxJava: ====================j 3
+11-07 15:22:15.311 18629-18629/com.css.rxjava D/RxJava: ====================res 6
+11-07 15:22:15.311 18629-18629/com.css.rxjava D/RxJava: ==================accept 6
 ```
 
 <span id="collect">
@@ -1256,11 +1497,29 @@ public final <U> Single<U> collect(Callable<? extends U> initialValueSupplier, B
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3, 4)
+                .collect(new Callable<ArrayList<Integer>>() {
+                             @Override
+                             public ArrayList<Integer> call() throws Exception {
+                                 return new ArrayList<>();
+                             }
+                         },
+                        new BiConsumer<ArrayList<Integer>, Integer>() {
+                            @Override
+                            public void accept(ArrayList<Integer> integers, Integer integer) throws Exception {
+                                integers.add(integer);
+                            }
+                        })
+                .subscribe(new Consumer<ArrayList<Integer>>() {
+                    @Override
+                    public void accept(ArrayList<Integer> integers) throws Exception {
+                        Log.d(TAG, "===============accept " + integers);
+                    }
+                });
 ```
 > **打印结果：**
 ```
-s
+11-07 15:24:43.761 18864-18864/com.css.rxjava D/RxJava: ===============accept [1, 2, 3, 4]
 ```
 
 <span id="startwith">
@@ -1274,11 +1533,25 @@ public final Observable<T> startWithArray(T... items)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(5, 6, 7)
+        .startWithArray(2, 3, 4)
+        .startWith(1)
+        .subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "================accept " + integer);
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+================accept 1
+================accept 2
+================accept 3
+================accept 4
+================accept 5
+================accept 6
+================accept 7
 ```
 
 <span id="count">
@@ -1291,11 +1564,18 @@ public final Single<Long> count()
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3)
+        .count()
+        .subscribe(new Consumer<Long>() {
+            @Override
+            public void accept(Long aLong) throws Exception {
+                Log.d(TAG, "=======================aLong " + aLong);
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+=======================aLong 3
 ```
 ---
 ### 功能操作符
@@ -1309,11 +1589,36 @@ public final Observable<T> delay(long delay, TimeUnit unit)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3)
+        .delay(2, TimeUnit.SECONDS)
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "=======================onSubscribe");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "=======================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "=======================onSubscribe");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+=======================onSubscribe
+=======================onNext 1
+=======================onNext 2
+=======================onNext 3
+=======================onSubscribe
 ```
 
 <span id="dooneach">
@@ -1326,11 +1631,55 @@ public final Observable<T> doOnEach(final Consumer<? super Notification<T>> onNo
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        //      e.onError(new NumberFormatException());
+        e.onComplete();
+    }
+})
+        .doOnEach(new Consumer<Notification<Integer>>() {
+            @Override
+            public void accept(Notification<Integer> integerNotification) throws Exception {
+                Log.d(TAG, "==================doOnEach " + integerNotification.getValue());
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+==================onSubscribe
+==================doOnEach 1
+==================onNext 1
+==================doOnEach 2
+==================onNext 2
+==================doOnEach 3
+==================onNext 3
+==================doOnEach null
+==================onComplete
 ```
 
 <span id="doonnext">
@@ -1343,11 +1692,53 @@ public final Observable<T> doOnNext(Consumer<? super T> onNext)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onComplete();
+    }
+})
+        .doOnNext(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "==================doOnNext " + integer);
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+==================onSubscribe
+==================doOnNext 1
+==================onNext 1
+==================doOnNext 2
+==================onNext 2
+==================doOnNext 3
+==================onNext 3
+==================onComplete
 ```
 
 <span id="doafternext">
@@ -1360,11 +1751,53 @@ public final Observable<T> doAfterNext(Consumer<? super T> onAfterNext)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onComplete();
+    }
+})
+        .doAfterNext(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "==================doAfterNext " + integer);
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+==================onSubscribe
+==================onNext 1
+==================doAfterNext 1
+==================onNext 2
+==================doAfterNext 2
+==================onNext 3
+==================doAfterNext 3
+==================onComplete
 ```
 
 <span id="dooncomplete">
@@ -1377,11 +1810,51 @@ public final Observable<T> doOnComplete(Action onComplete)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onComplete();
+    }
+})
+        .doOnComplete(new Action() {
+            @Override
+            public void run() throws Exception {
+                Log.d(TAG, "==================doOnComplete ");
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+==================onSubscribe
+==================onNext 1
+==================onNext 2
+==================onNext 3
+==================doOnComplete
+==================onComplete
 ```
 
 <span id="doonerror">
@@ -1394,11 +1867,51 @@ public final Observable<T> doOnError(Consumer<? super Throwable> onError)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onError(new NullPointerException());
+    }
+})
+        .doOnError(new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                Log.d(TAG, "==================doOnError " + throwable);
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+==================onSubscribe
+==================onNext 1
+==================onNext 2
+==================onNext 3
+==================doOnError java.lang.NullPointerException
+==================onError
 ```
 
 <span id="doonsubscribe">
@@ -1411,11 +1924,51 @@ public final Observable<T> doOnSubscribe(Consumer<? super Disposable> onSubscrib
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onComplete();
+    }
+})
+        .doOnSubscribe(new Consumer<Disposable>() {
+            @Override
+            public void accept(Disposable disposable) throws Exception {
+                Log.d(TAG, "==================doOnSubscribe ");
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+==================doOnSubscribe
+==================onSubscribe
+==================onNext 1
+==================onNext 2
+==================onNext 3
+==================onComplete
 ```
 
 <span id="doondispose">
@@ -1428,11 +1981,52 @@ public final Observable<T> doOnDispose(Action onDispose)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onComplete();
+    }
+})
+        .doOnDispose(new Action() {
+            @Override
+            public void run() throws Exception {
+                Log.d(TAG, "==================doOnDispose ");
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            private Disposable d;
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+                this.d = d;
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+                d.dispose();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+==================onSubscribe
+==================onNext 1
+==================doOnDispose
 ```
 
 <span id="doonlifecycle">
@@ -1445,11 +2039,71 @@ public final Observable<T> doOnLifecycle(final Consumer<? super Disposable> onSu
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onComplete();
+    }
+})
+        .doOnLifecycle(new Consumer<Disposable>() {
+            @Override
+            public void accept(Disposable disposable) throws Exception {
+                Log.d(TAG, "==================doOnLifecycle accept");
+            }
+        }, new Action() {
+            @Override
+            public void run() throws Exception {
+                Log.d(TAG, "==================doOnLifecycle Action");
+            }
+        })
+        .doOnDispose(
+                new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        Log.d(TAG, "==================doOnDispose Action");
+                    }
+                })
+        .subscribe(new Observer<Integer>() {
+            private Disposable d;
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+                this.d = d;
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+                d.dispose();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 15:43:09.281 19313-19313/com.css.rxjava D/RxJava: ==================doOnLifecycle accept
+11-07 15:43:09.281 19313-19313/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 15:43:09.281 19313-19313/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 15:43:09.281 19313-19313/com.css.rxjava D/RxJava: ==================doOnDispose Action
+11-07 15:43:09.281 19313-19313/com.css.rxjava D/RxJava: ==================doOnLifecycle Action
+```
+可以看到当在 onNext() 方法进行取消订阅操作后，doOnDispose() 和 doOnLifecycle() 都会被回调。如果在 doOnLifecycle 内部的accept方法内进行取消订阅disposable.dispose()，则打印结果：
+```
+11-07 15:44:24.811 19503-19503/com.css.rxjava D/RxJava: ==================doOnLifecycle accept
+11-07 15:44:24.811 19503-19503/com.css.rxjava D/RxJava: ==================onSubscribe
 ```
 
 <span id="doonterminate">
@@ -1463,28 +2117,123 @@ public final Observable<T> doAfterTerminate(Action onFinally)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+//      e.onError(new NullPointerException());
+        e.onComplete();
+    }
+})
+        .doOnTerminate(new Action() {
+            @Override
+            public void run() throws Exception {
+                Log.d(TAG, "==================doOnTerminate ");
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 15:46:19.931 19741-19741/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 15:46:19.931 19741-19741/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 15:46:19.931 19741-19741/com.css.rxjava D/RxJava: ==================onNext 2
+11-07 15:46:19.931 19741-19741/com.css.rxjava D/RxJava: ==================onNext 3
+11-07 15:46:19.931 19741-19741/com.css.rxjava D/RxJava: ==================doOnTerminate
+11-07 15:46:19.931 19741-19741/com.css.rxjava D/RxJava: ==================onComplete
 ```
 
 <span id="dofinally">
 
 ### 41. doFinally()
-> **方法作用：**<br>在所有事件发送完毕之后回调该方法。<br><br>
+> **方法作用：**<br>在所有事件发送完毕之后回调该方法。doFinally() 和 doAfterTerminate() 到底有什么区别？区别就是在于取消订阅，如果取消订阅之后 doAfterTerminate() 就不会被回调，而 doFinally() 无论怎么样都会被回调，且都会在事件序列的最后。<br><br>
 > **方法预览：**
 ```
 public final Observable<T> doFinally(Action onFinally)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onComplete();
+    }
+})
+        .doFinally(new Action() {
+            @Override
+            public void run() throws Exception {
+                Log.d(TAG, "==================doFinally ");
+            }
+        })
+        .doOnDispose(new Action() {
+            @Override
+            public void run() throws Exception {
+                Log.d(TAG, "==================doOnDispose ");
+            }
+        })
+        .doAfterTerminate(new Action() {
+            @Override
+            public void run() throws Exception {
+                Log.d(TAG, "==================doAfterTerminate ");
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            private Disposable d;
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+                this.d = d;
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+                d.dispose();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+==================onSubscribe
+==================onNext 1
+==================doOnDispose
+==================doFinally
 ```
 
 <span id="onerrorreturn">
@@ -1497,11 +2246,53 @@ public final Observable<T> onErrorReturn(Function<? super Throwable, ? extends T
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onError(new NullPointerException());
+    }
+})
+        .onErrorReturn(new Function<Throwable, Integer>() {
+            @Override
+            public Integer apply(Throwable throwable) throws Exception {
+                Log.d(TAG, "==================onErrorReturn " + throwable);
+                return 404;
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 15:48:45.291 19964-19964/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 15:48:45.291 19964-19964/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 15:48:45.291 19964-19964/com.css.rxjava D/RxJava: ==================onNext 2
+11-07 15:48:45.291 19964-19964/com.css.rxjava D/RxJava: ==================onNext 3
+11-07 15:48:45.291 19964-19964/com.css.rxjava D/RxJava: ==================onErrorReturn java.lang.NullPointerException
+11-07 15:48:45.291 19964-19964/com.css.rxjava D/RxJava: ==================onNext 404
+11-07 15:48:45.291 19964-19964/com.css.rxjava D/RxJava: ==================onComplete
 ```
 
 <span id="onerrorresumenext">
@@ -1514,11 +2305,55 @@ public final Observable<T> onErrorResumeNext(Function<? super Throwable, ? exten
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onError(new NullPointerException());
+    }
+})
+        .onErrorResumeNext(new Function<Throwable, ObservableSource<? extends Integer>>() {
+            @Override
+            public ObservableSource<? extends Integer> apply(Throwable throwable) throws Exception {
+                Log.d(TAG, "==================onErrorResumeNext " + throwable);
+                return Observable.just(4, 5, 6);
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 15:49:37.131 20160-20160/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 15:49:37.131 20160-20160/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 15:49:37.131 20160-20160/com.css.rxjava D/RxJava: ==================onNext 2
+11-07 15:49:37.131 20160-20160/com.css.rxjava D/RxJava: ==================onNext 3
+11-07 15:49:37.131 20160-20160/com.css.rxjava D/RxJava: ==================onErrorResumeNext java.lang.NullPointerException
+11-07 15:49:37.131 20160-20160/com.css.rxjava D/RxJava: ==================onNext 4
+11-07 15:49:37.131 20160-20160/com.css.rxjava D/RxJava: ==================onNext 5
+11-07 15:49:37.131 20160-20160/com.css.rxjava D/RxJava: ==================onNext 6
+11-07 15:49:37.131 20160-20160/com.css.rxjava D/RxJava: ==================onComplete
 ```
 
 <span id="onexceptionresumenext">
@@ -1531,11 +2366,61 @@ public final Observable<T> onExceptionResumeNext(final ObservableSource<? extend
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onError(new Error("404"));
+    }
+})
+        .onExceptionResumeNext(new Observable<Integer>() {
+            @Override
+            protected void subscribeActual(Observer<? super Integer> observer) {
+                observer.onNext(333);
+                observer.onComplete();
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 15:50:29.171 20419-20419/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 15:50:29.171 20419-20419/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 15:50:29.171 20419-20419/com.css.rxjava D/RxJava: ==================onNext 2
+11-07 15:50:29.171 20419-20419/com.css.rxjava D/RxJava: ==================onNext 3
+11-07 15:50:29.171 20419-20419/com.css.rxjava D/RxJava: ==================onError
+```
+从打印结果可以知道，观察者收到 onError() 事件，证明 onErrorResumeNext() 不能捕捉 Error 事件。<br>
+将被观察者的 e.onError(new Error("404")) 改为 e.onError(new Exception("404"))，从打印结果可以知道，这个方法成功捕获 Exception 事件：
+```
+11-07 15:52:54.421 20670-20670/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 15:52:54.421 20670-20670/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 15:52:54.421 20670-20670/com.css.rxjava D/RxJava: ==================onNext 2
+11-07 15:52:54.421 20670-20670/com.css.rxjava D/RxJava: ==================onNext 3
+11-07 15:52:54.421 20670-20670/com.css.rxjava D/RxJava: ==================onNext 333
+11-07 15:52:54.421 20670-20670/com.css.rxjava D/RxJava: ==================onComplete
 ```
 
 <span id="retry">
@@ -1549,11 +2434,51 @@ public final Observable<T> retry(long times)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onError(new Exception("404"));
+    }
+})
+        .retry(2)
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+==================onSubscribe
+==================onNext 1
+==================onNext 2
+==================onNext 3
+==================onNext 1
+==================onNext 2
+==================onNext 3
+==================onNext 1
+==================onNext 2
+==================onNext 3
+==================onError
 ```
 
 <span id="retryuntil">
@@ -1566,11 +2491,55 @@ public final Observable<T> retryUntil(final BooleanSupplier stop)
 ```
 > **方法使用：**
 ```
-s
+int i = 0;//类内部变量
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onError(new Exception("404"));
+    }
+})
+        .retryUntil(new BooleanSupplier() {
+            @Override
+            public boolean getAsBoolean() throws Exception {
+                if (i == 6) {
+                    return true;
+                }
+                return false;
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                i += integer;
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 15:59:18.361 21020-21020/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 15:59:18.361 21020-21020/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 15:59:18.361 21020-21020/com.css.rxjava D/RxJava: ==================onNext 2
+11-07 15:59:18.361 21020-21020/com.css.rxjava D/RxJava: ==================onNext 3
+11-07 15:59:18.361 21020-21020/com.css.rxjava D/RxJava: ==================onError
 ```
 
 <span id="retrywhen">
@@ -1579,15 +2548,75 @@ s
 > **方法作用：**<br>当被观察者接收到异常或者错误事件时会回调该方法，这个方法会返回一个新的被观察者。如果返回的被观察者发送 Error 事件则之前的被观察者不会继续发送事件，如果发送正常事件则之前的被观察者会继续不断重试发送事件。<br><br>
 > **方法预览：**
 ```
-public final void safeSubscribe(Observer<? super T> s)
+public final Observable<T> retryWhen(final Function<? super Observable<Throwable>, ? extends ObservableSource<?>> handler)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+                e.onNext("g");
+                e.onNext("y");
+                e.onNext("c");
+                e.onError(new Exception("404"));
+                e.onNext("haha");
+            }
+        })
+                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
+                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                if (!throwable.toString().equals("java.lang.Exception: 404")) {
+                                    return Observable.just("可以忽略的异常");
+                                } else {
+                                    return Observable.error(new Throwable("终止啦"));
+                                }
+                            }
+                        });
+                    }
+                })
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG, "==================onSubscribe ");
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        Log.d(TAG, "==================onNext " + s);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "==================onError " + e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "==================onComplete ");
+                    }
+                });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:07:56.681 21417-21417/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 16:07:56.691 21417-21417/com.css.rxjava D/RxJava: ==================onNext g
+11-07 16:07:56.691 21417-21417/com.css.rxjava D/RxJava: ==================onNext y
+11-07 16:07:56.691 21417-21417/com.css.rxjava D/RxJava: ==================onNext c
+11-07 16:07:56.691 21417-21417/com.css.rxjava D/RxJava: ==================onError java.lang.Throwable: 终止啦
+```
+将 onError(new Exception("404")) 改为 onError(new Exception("303")) 打印结果：
+```
+11-07 16:14:59.081 21997-21997/com.css.rxjava D/RxJava: ==================onNext g
+11-07 16:14:59.081 21997-21997/com.css.rxjava D/RxJava: ==================onNext y
+11-07 16:14:59.081 21997-21997/com.css.rxjava D/RxJava: ==================onNext c
+11-07 16:14:59.081 21997-21997/com.css.rxjava D/RxJava: ==================onNext c
+11-07 16:14:59.081 21997-21997/com.css.rxjava D/RxJava: ==================onNext g
+11-07 16:14:59.081 21997-21997/com.css.rxjava D/RxJava: ==================onNext y
+11-07 16:14:59.081 21997-21997/com.css.rxjava D/RxJava: ==================onNext y
+11-07 16:14:59.081 21997-21997/com.css.rxjava D/RxJava: ==================onNext g
 ```
 
 <span id="repeat">
@@ -1601,45 +2630,170 @@ public final Observable<T> repeat(long times)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onComplete();
+    }
+})
+        .repeat(2)
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "===================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "===================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "===================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:18:49.631 22353-22353/com.css.rxjava D/RxJava: ===================onSubscribe
+11-07 16:18:49.631 22353-22353/com.css.rxjava D/RxJava: ===================onNext 1
+11-07 16:18:49.631 22353-22353/com.css.rxjava D/RxJava: ===================onNext 2
+11-07 16:18:49.631 22353-22353/com.css.rxjava D/RxJava: ===================onNext 3
+11-07 16:18:49.631 22353-22353/com.css.rxjava D/RxJava: ===================onNext 1
+11-07 16:18:49.631 22353-22353/com.css.rxjava D/RxJava: ===================onNext 2
+11-07 16:18:49.631 22353-22353/com.css.rxjava D/RxJava: ===================onNext 3
+11-07 16:18:49.631 22353-22353/com.css.rxjava D/RxJava: ===================onComplete
 ```
 
 <span id="repeatwhen">
 
 ### 49. repeatWhen()
-> **方法作用：**<br>这个方法可以会返回一个新的被观察者设定一定逻辑来决定是否重复发送事件。<br><br>
+> **方法作用：**<br>这个方法可以会返回一个新的被观察者设定一定逻辑来决定是否重复发送事件。这里分三种情况，如果新的被观察者返回 onComplete 或者 onError 事件，则旧的被观察者不会继续发送事件。如果被观察者返回其他事件，则会重复发送事件。<br><br>
 > **方法预览：**
 ```
 public final Observable<T> repeatWhen(final Function<? super Observable<Object>, ? extends ObservableSource<?>> handler)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onComplete();
+    }
+})
+        .repeatWhen(new Function<Observable<Object>, ObservableSource<?>>() {
+            @Override
+            public ObservableSource<?> apply(Observable<Object> objectObservable) throws Exception {
+                return Observable.empty();
+                //  return Observable.error(new Exception("404"));
+                //  return Observable.just(4); null;
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "===================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "===================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "===================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "===================onComplete ");
+            }
+        });
 ```
-> **打印结果：**
+> **打印结果：**<br>return Observable.empty();
 ```
-s
+05-24 11:44:33.486 9379-9379/com.example.rxjavademo D/chan: ===================onSubscribe
+05-24 11:44:33.487 9379-9379/com.example.rxjavademo D/chan: ===================onComplete
+```
+发送 onError 打印结果：return Observable.error(new Exception("404"));
+```
+11-07 16:23:38.781 23165-23165/com.css.rxjava D/RxJava: ===================onSubscribe
+11-07 16:23:38.781 23165-23165/com.css.rxjava D/RxJava: ===================onError
+```
+发送其他事件的打印结果：return Observable.just(4);
+```
+11-07 16:24:16.581 23351-23351/com.css.rxjava D/RxJava: ===================onSubscribe
+11-07 16:24:16.581 23351-23351/com.css.rxjava D/RxJava: ===================onNext 1
+11-07 16:24:16.581 23351-23351/com.css.rxjava D/RxJava: ===================onNext 2
+11-07 16:24:16.581 23351-23351/com.css.rxjava D/RxJava: ===================onNext 3
+11-07 16:24:16.581 23351-23351/com.css.rxjava D/RxJava: ===================onComplete
 ```
 
 <span id="subscribeon">
 
 ### 50. subscribeOn()
-> **方法作用：**<br>指定被观察者的线程，要注意的时，如果多次调用此方法，只有第一次有效。<br><br>
+> **方法作用：**<br>指定被观察者的线程，需要注意的是，如果多次调用此方法，只有第一次有效。<br><br>
 > **方法预览：**
 ```
 public final Observable<T> subscribeOn(Scheduler scheduler)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        Log.d(TAG, "=========================currentThread name: " + Thread.currentThread().getName());
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onComplete();
+    }
+})
+        .subscribeOn(Schedulers.computation())
+        .subscribeOn(Schedulers.newThread())
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "======================onSubscribe");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "======================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "======================onError");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "======================onComplete");
+            }
+        });
 ```
-> **打印结果：**
+> **打印结果：**<br>
+可以看到第二次调动的 subscribeOn(Schedulers.newThread()) 并没有效果。
 ```
-s
+11-07 16:28:52.411 23846-23846/com.css.rxjava D/RxJava: ======================onSubscribe
+11-07 16:28:52.421 23846-24000/com.css.rxjava D/RxJava: =========================currentThread name: RxComputationThreadPool-2
+11-07 16:28:52.421 23846-24000/com.css.rxjava D/RxJava: ======================onNext 1
+11-07 16:28:52.421 23846-24000/com.css.rxjava D/RxJava: ======================onNext 2
+11-07 16:28:52.421 23846-24000/com.css.rxjava D/RxJava: ======================onNext 3
+11-07 16:28:52.421 23846-24000/com.css.rxjava D/RxJava: ======================onComplete
 ```
 
 <span id="observeon">
@@ -1652,12 +2806,63 @@ public final Observable<T> observeOn(Scheduler scheduler)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3)
+        .observeOn(Schedulers.newThread())
+        .flatMap(new Function<Integer, ObservableSource<String>>() {
+            @Override
+            public ObservableSource<String> apply(Integer integer) throws Exception {
+                Log.d(TAG, "======================flatMap Thread name " + Thread.currentThread().getName());
+                return Observable.just("chan" + integer);
+            }
+        })
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "======================onSubscribe");
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.d(TAG, "======================onNext Thread name " + Thread.currentThread().getName());
+                Log.d(TAG, "======================onNext " + s);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "======================onError");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "======================onComplete");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:30:20.821 24169-24169/com.css.rxjava D/RxJava: ======================onSubscribe
+11-07 16:30:20.831 24169-24209/com.css.rxjava D/RxJava: ======================flatMap Thread name RxNewThreadScheduler-1
+11-07 16:30:20.831 24169-24209/com.css.rxjava D/RxJava: ======================flatMap Thread name RxNewThreadScheduler-1
+11-07 16:30:20.831 24169-24209/com.css.rxjava D/RxJava: ======================flatMap Thread name RxNewThreadScheduler-1
+11-07 16:30:20.861 24169-24169/com.css.rxjava D/RxJava: ======================onNext Thread name main
+11-07 16:30:20.861 24169-24169/com.css.rxjava D/RxJava: ======================onNext chan1
+11-07 16:30:20.861 24169-24169/com.css.rxjava D/RxJava: ======================onNext Thread name main
+11-07 16:30:20.861 24169-24169/com.css.rxjava D/RxJava: ======================onNext chan2
+11-07 16:30:20.861 24169-24169/com.css.rxjava D/RxJava: ======================onNext Thread name main
+11-07 16:30:20.861 24169-24169/com.css.rxjava D/RxJava: ======================onNext chan3
+11-07 16:30:20.861 24169-24169/com.css.rxjava D/RxJava: ======================onComplete
 ```
+<br>
+下表总结了 RxJava 中的调度器：<br>
+
+| 调度器 | 作用 |
+| :--- | :--- |
+| Schedulers.computation() | 用于使用计算任务，如事件循环和回调处理 |
+| Schedulers.immediate() | 当前线程 |
+| Schedulers.io() | 用于 IO 密集型任务，如果异步阻塞 IO 操作 |
+| Schedulers.newThread() | 创建一个新的线程 |
+| AndroidSchedulers.mainThread() | Android 的 UI 线程，用于操作 UI |
 ---
 ### 过滤操作符
 <span id="filter">
@@ -1670,11 +2875,41 @@ public final Observable<T> filter(Predicate<? super T> predicate)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3)
+        .filter(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer integer) throws Exception {
+                return integer < 2;
+            }
+        })
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                i += integer;
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:37:38.901 24636-24636/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 16:37:38.901 24636-24636/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 16:37:38.901 24636-24636/com.css.rxjava D/RxJava: ==================onComplete
 ```
 
 <span id="oftype">
@@ -1687,11 +2922,38 @@ public final <U> Observable<U> ofType(final Class<U> clazz)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3, "chan", "zhide")
+        .ofType(Integer.class)
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                i += integer;
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:38:15.821 24881-24881/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 16:38:15.821 24881-24881/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 16:38:15.821 24881-24881/com.css.rxjava D/RxJava: ==================onNext 2
+11-07 16:38:15.821 24881-24881/com.css.rxjava D/RxJava: ==================onNext 3
+11-07 16:38:15.821 24881-24881/com.css.rxjava D/RxJava: ==================onComplete
 ```
 
 <span id="skip">
@@ -1705,11 +2967,36 @@ public final Observable<T> skip(long count)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3)
+        .skip(2)
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                i += integer;
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:38:42.141 25111-25111/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 16:38:42.141 25111-25111/com.css.rxjava D/RxJava: ==================onNext 3
+11-07 16:38:42.141 25111-25111/com.css.rxjava D/RxJava: ==================onComplete
 ```
 
 <span id="distinct">
@@ -1722,11 +3009,38 @@ public final Observable<T> distinct()
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3, 3, 2, 1)
+        .distinct()
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                i += integer;
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:39:43.401 25285-25285/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 16:39:43.401 25285-25285/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 16:39:43.401 25285-25285/com.css.rxjava D/RxJava: ==================onNext 2
+11-07 16:39:43.401 25285-25285/com.css.rxjava D/RxJava: ==================onNext 3
+11-07 16:39:43.401 25285-25285/com.css.rxjava D/RxJava: ==================onComplete
 ```
 
 <span id="distinctuntilchanged">
@@ -1739,11 +3053,40 @@ public final Observable<T> distinctUntilChanged()
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3, 3, 2, 1)
+        .distinctUntilChanged()
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                i += integer;
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:40:13.711 25478-25478/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 16:40:13.711 25478-25478/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 16:40:13.711 25478-25478/com.css.rxjava D/RxJava: ==================onNext 2
+11-07 16:40:13.711 25478-25478/com.css.rxjava D/RxJava: ==================onNext 3
+11-07 16:40:13.711 25478-25478/com.css.rxjava D/RxJava: ==================onNext 2
+11-07 16:40:13.711 25478-25478/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 16:40:13.711 25478-25478/com.css.rxjava D/RxJava: ==================onComplete
 ```
 
 <span id="take">
@@ -1757,11 +3100,38 @@ public final Observable<T> take(long count)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3, 4, 5)
+        .take(3)
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "==================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                i += integer;
+                Log.d(TAG, "==================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "==================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "==================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:41:00.111 25705-25705/com.css.rxjava D/RxJava: ==================onSubscribe
+11-07 16:41:00.111 25705-25705/com.css.rxjava D/RxJava: ==================onNext 1
+11-07 16:41:00.111 25705-25705/com.css.rxjava D/RxJava: ==================onNext 2
+11-07 16:41:00.111 25705-25705/com.css.rxjava D/RxJava: ==================onNext 3
+11-07 16:41:00.111 25705-25705/com.css.rxjava D/RxJava: ==================onComplete
 ```
 
 <span id="debounce">
@@ -1775,11 +3145,41 @@ public final Observable<T> debounce(long timeout, TimeUnit unit)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        Thread.sleep(900);
+        e.onNext(2);
+    }
+})
+        .debounce(1, TimeUnit.SECONDS)
+        .subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "===================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "===================onNext " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "===================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "===================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:41:33.041 25992-25992/com.css.rxjava D/RxJava: ===================onSubscribe
+11-07 16:41:34.941 25992-26019/com.css.rxjava D/RxJava: ===================onNext 2
 ```
 
 <span id="firstelement">
@@ -1793,11 +3193,19 @@ public final Maybe<T> lastElement()
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3, 4)
+        .lastElement()
+        .subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "====================lastElement " + integer);
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+====================firstElement 1
+====================lastElement 4
 ```
 
 <span id="elementat">
@@ -1811,11 +3219,27 @@ public final Single<T> elementAtOrError(long index)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3, 4)
+        .firstElement()
+        .subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "====================firstElement " + integer);
+            }
+        });
+Observable.just(1, 2, 3, 4)
+        .lastElement()
+        .subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "====================lastElement " + integer);
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+====================firstElement 1
+====================lastElement 4
 ```
 ---
 ### 条件操作符
@@ -1829,11 +3253,23 @@ public final Single<Boolean> all(Predicate<? super T> predicate)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3, 4)
+        .all(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer integer) throws Exception {
+                return integer < 5;
+            }
+        })
+        .subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.d(TAG, "==================aBoolean " + aBoolean);
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+==================aBoolean true
 ```
 
 <span id="takewhile">
@@ -1846,11 +3282,24 @@ public final Observable<T> takeWhile(Predicate<? super T> predicate)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3, 4)
+        .takeWhile(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer integer) throws Exception {
+                return integer < 3;
+            }
+        })
+        .subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "========================integer " + integer);
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+========================integer 1
+========================integer 2
 ```
 
 <span id="skipwhile">
@@ -1863,11 +3312,24 @@ public final Observable<T> skipWhile(Predicate<? super T> predicate)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3, 4)
+        .skipWhile(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer integer) throws Exception {
+                return integer < 3;
+            }
+        })
+        .subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "========================integer " + integer);
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+========================integer 3
+========================integer 4
 ```
 
 <span id="takeuntil">
@@ -1880,11 +3342,26 @@ public final Observable<T> takeUntil(Predicate<? super T> stopPredicate
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3, 4, 5, 6)
+        .takeUntil(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer integer) throws Exception {
+                return integer > 3;
+            }
+        })
+        .subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "========================integer " + integer);
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:47:29.151 26631-26631/com.css.rxjava D/RxJava: ========================integer 1
+11-07 16:47:29.151 26631-26631/com.css.rxjava D/RxJava: ========================integer 2
+11-07 16:47:29.151 26631-26631/com.css.rxjava D/RxJava: ========================integer 3
+11-07 16:47:29.151 26631-26631/com.css.rxjava D/RxJava: ========================integer 4
 ```
 
 <span id="skipuntil">
@@ -1897,11 +3374,35 @@ public final <U> Observable<T> skipUntil(ObservableSource<U> other)
 ```
 > **方法使用：**
 ```
-s
+Observable.intervalRange(1, 5, 0, 1, TimeUnit.SECONDS)
+        .skipUntil(Observable.intervalRange(6, 5, 3, 1, TimeUnit.SECONDS))
+        .subscribe(new Observer<Long>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "========================onSubscribe ");
+            }
+
+            @Override
+            public void onNext(Long along) {
+                Log.d(TAG, "========================onNext " + along);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "========================onError ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "========================onComplete ");
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:48:46.211 27680-27726/com.css.rxjava D/RxJava: ========================onNext 4
+11-07 16:48:47.211 27680-27726/com.css.rxjava D/RxJava: ========================onNext 5
+11-07 16:48:47.211 27680-27726/com.css.rxjava D/RxJava: ========================onComplete
 ```
 
 <span id="sequenceequal">
@@ -1915,11 +3416,18 @@ public static <T> Single<Boolean> sequenceEqual(ObservableSource<? extends T> so
 ```
 > **方法使用：**
 ```
-s
+Observable.sequenceEqual(Observable.just(1, 2, 3),
+        Observable.just(1, 2, 3))
+        .subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.d(TAG, "========================onNext " + aBoolean);
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+========================onNext true
 ```
 
 <span id="contains">
@@ -1932,11 +3440,18 @@ public final Single<Boolean> contains(final Object element)
 ```
 > **方法使用：**
 ```
-s
+Observable.just(1, 2, 3)
+        .contains(3)
+        .subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.d(TAG, "========================onNext " + aBoolean);
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+========================onNext true
 ```
 
 <span id="isempty">
@@ -1949,11 +3464,23 @@ public final Single<Boolean> isEmpty()
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onComplete();
+    }
+})
+        .isEmpty()
+        .subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.d(TAG, "========================onNext " + aBoolean);
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+========================onNext true
 ```
 
 <span id="amb">
@@ -1966,11 +3493,24 @@ public static <T> Observable<T> amb(Iterable<? extends ObservableSource<? extend
 ```
 > **方法使用：**
 ```
-s
+ArrayList<Observable<Long>> list = new ArrayList<>();
+        list.add(Observable.intervalRange(1, 5, 2, 1, TimeUnit.SECONDS));
+        list.add(Observable.intervalRange(6, 5, 0, 1, TimeUnit.SECONDS));
+        Observable.amb(list)
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        Log.d(TAG, "========================aLong " + aLong);
+                    }
+                });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:51:59.351 28077-28108/com.css.rxjava D/RxJava: ========================aLong 6
+11-07 16:52:00.351 28077-28108/com.css.rxjava D/RxJava: ========================aLong 7
+11-07 16:52:01.351 28077-28108/com.css.rxjava D/RxJava: ========================aLong 8
+11-07 16:52:02.351 28077-28108/com.css.rxjava D/RxJava: ========================aLong 9
+11-07 16:52:03.351 28077-28108/com.css.rxjava D/RxJava: ========================aLong 10
 ```
 
 <span id="defaultIfEmpty">
@@ -1983,9 +3523,21 @@ public final Observable<T> defaultIfEmpty(T defaultItem)
 ```
 > **方法使用：**
 ```
-s
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onComplete();
+    }
+})
+        .defaultIfEmpty(666)
+        .subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "========================onNext " + integer);
+            }
+        });
 ```
 > **打印结果：**
 ```
-s
+11-07 16:54:56.571 28303-28303/com.css.rxjava D/RxJava: ========================onNext 666
 ```
