@@ -802,7 +802,7 @@ public final <R> Observable<R> concatMap(Function<? super T, ? extends Observabl
 > **方法使用：**
 ```
 Observable.fromIterable(personList)
-        .flatMap(new Function<Person, ObservableSource<Plan>>() {
+        .concatMap(new Function<Person, ObservableSource<Plan>>() {
             @Override
             public ObservableSource<Plan> apply(Person person) {
                 if ("chan".equals(person.getName())) {
