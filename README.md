@@ -607,7 +607,7 @@ public static Observable<Long> rangeLong(long start, long count)
 
 <span id="empty">
 
-### 13. empty() & never() & error()
+### 13. empty() & never() & error() &#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;[回到目录](#目录)
 > **方法作用：**<br>
 + empty() ：直接发送 onComplete() 事件
 + never()：不发送任何事件
