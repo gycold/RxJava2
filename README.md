@@ -1117,10 +1117,11 @@ Observable.just(1, 2, 3, 4, 5)
 <span id="concat">
 
 ### 21. concat() &#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;[回到目录](#目录)
-> **方法作用：**<br>可以将多个观察者组合在一起，然后按照之前发送顺序发送事件。需要注意的是，concat() 最多只可以发送4个事件。<br><br>
+> **方法作用：**<br>可以将多个观察者组合在一起，然后按照之前发送顺序发送事件。需要注意的是，concat() 最多只可以发送4个事件，不过传入Iterable则可以发送多个事件。<br><br>
 > **方法预览：**
 ```
 public static <T> Observable<T> concat(ObservableSource<? extends T> source1, ObservableSource<? extends T> source2, ObservableSource<? extends T> source3, ObservableSource<? extends T> source4)
+public static <T> Observable<T> concat(Iterable<? extends ObservableSource<? extends T>> sources)
 ......
 ```
 > **方法使用：**
