@@ -705,7 +705,7 @@ Observable.just(1, 2, 3)
 <span id="flatmap">
 
 ### 15. flatMap() &#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;[回到目录](#目录)
-> **方法作用：**<br>这个方法可以将事件序列中的元素进行整合加工，返回一个新的被观察者。<br><br>
+> **方法作用：**<br>这个方法可以将事件序列中的元素进行整合加工，返回一个新的被观察者。整个过程是串行执行的<br><br>
 > **方法预览：**
 ```
 public final <R> Observable<R> flatMap(Function<? super T, ? extends ObservableSource<? extends R>> mapper)
@@ -1310,7 +1310,7 @@ Observable.concatArray(
 <span id="zip">
 
 ### 25. zip() &#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;&#8195;[回到目录](#目录)
-> **方法作用：**<br>会将多个被观察者合并，根据各个被观察者发送事件的顺序一个个结合起来，最终发送的事件数量会与源 Observable 中最少事件的数量一样。<br><br>
+> **方法作用：**<br>会将多个被观察者合并，根据各个被观察者发送事件的顺序一个个结合起来，最终发送的事件数量会与源 Observable 中最少事件的数量一样。整个过程是并行执行的。<br><br>
 > **方法预览：**
 ```
 public static <T1, T2, R> Observable<R> zip(ObservableSource<? extends T1> source1, ObservableSource<? extends T2> source2, BiFunction<? super T1, ? super T2, ? extends R> zipper)
